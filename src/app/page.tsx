@@ -7,28 +7,13 @@ import { Partners } from "@/components/home/partners";
 import { Services } from "@/components/home/services";
 import { Solutions } from "@/components/home/solutions";
 import { company } from "@/content/site";
-
-const organizationJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: company.name,
-  alternateName: company.nameEn,
-  url: company.url,
-  logo: `${company.url}/brand/ezcredible-logo.svg`,
-  description: company.description,
-  address: {
-    "@type": "PostalAddress",
-    addressCountry: "KR",
-    addressRegion: "서울특별시",
-    addressLocality: "금천구",
-    streetAddress: "서부샛길 606, 대성디폴리스 B동 2006-2호",
-  },
-};
+import { JsonLd } from "@/components/seo/json-ld";
+import { organizationLd, websiteLd } from "@/lib/structured-data";
 
 export default function Home() {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <JsonLd data={[organizationLd(), websiteLd()]} />
       <Hero />
       <IntroCard />
       <Solutions />

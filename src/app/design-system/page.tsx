@@ -29,6 +29,7 @@ import { Reveal } from "@/components/motion/reveal";
 export const metadata: Metadata = {
   title: "디자인 시스템",
   robots: { index: false, follow: false },
+  alternates: { canonical: null },
 };
 
 /* ---------- 로컬 헬퍼 ---------- */

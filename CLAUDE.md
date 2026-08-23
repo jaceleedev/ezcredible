@@ -85,6 +85,11 @@ www.ezcredible.com(한국 B2B 기업금융 컨설팅: 정책자금 · 유동성�
    `CONSULTATION_NOTIFY_FROM`·`CONSULTATION_REPLY_TO`는 **키를 만들지 말 것**(도메인 인증 후 FROM만 추가).
    빈 값으로 키만 만들어도 이제는 안전하다 — `deliver-consultation.ts`의 `env()`가 빈 문자열을 미설정으로 본다.
 
+   **`ENABLE_EXPERIMENTAL_COREPACK=1`도 같이 넣는다 — 이건 Production만이 아니라 3개 환경 전부에.**
+   Vercel이 지원하는 pnpm은 6~10이라 그냥 두면 락파일(`lockfileVersion: 9.0`)을 보고 pnpm 10으로 설치한다.
+   corepack을 켜면 `package.json`의 `packageManager: pnpm@11.22.0`을 그대로 쓴다. 빌드 도구 설정이라
+   DB 자격증명과 성격이 다르니 환경을 가릴 이유가 없다. Vercel이 experimental이라 부르는 건 Node의 corepack 자체가 실험 단계라서다.
+
    **환경변수는 Production만 체크한다.** 셋 다 체크하면 브랜치 푸시마다 생기는 프리뷰 배포가
    운영 DB에 직접 쓴다(프리뷰에서 폼 테스트하면 진짜 상담 목록에 섞인다).
    Production만 두면 프리뷰에서는 폼이 "준비 중"으로 뜨고 운영 데이터를 안 건드린다.
@@ -114,12 +119,34 @@ www.ezcredible.com(한국 B2B 기업금융 컨설팅: 정책자금 · 유동성�
 
 검수 시 확인한 코덱스 변경(참고): 히어로 `width/height` 1600×1000, `arrow-3d.svg` → `.png`, 서비스 카드 `self-stretch`, CTA 리드 모바일 `max-w`, 푸터 로고 `self-start`, `SubHero` 배너 모바일 `object-[85%_center]`(오른쪽 오브젝트가 보이도록), 자금 페이지 11개 01 스테이지는 그룹 카드 이미지 재사용, 회사소개 3페이지 01 스테이지도 솔루션 이미지 재사용, `/design-system/og` 재캡처. `privacyOfficer.phone`이 채워져 있다(Jace 확인값) — 이메일은 아직 빈 값.
 
-### SEO · 메타 (2026-08-23)
+### 성능·보안 정리 (2026-08-24) — 측정하고 고친 것
+
+측정은 전부 빌드 산출물 기준(`.next/diagnostics/route-bundle-stats.json`, gzip 실측, 프로덕션 서버 + 브라우저 network 패널). 로컬 개발 서버 체감이 아니다.
+
+- **`SUIT-Bold.woff2` 167KB가 매 페이지 preload되는데 한 글자도 안 쓰이고 있었다.** `layout.tsx`가 700·800 두 벌을 등록하면 `next/font`가 둘 다 `<link rel="preload">` 하는데, SUIT을 적용하는 규칙은 `globals.css`의 `h1~h4`(weight 800) 하나뿐이고 `.font-display`가 붙은 36곳도 전부 `font-extrabold`였다. 700을 요구하는 곳이 코드 전체에 없다. 800만 남기고 파일을 지웠다 — **홈 폰트 전송량 419KB → 252KB**(브라우저에서 실측). 700을 쓰는 곳이 생기면 파일을 되살리고 `src`에 다시 추가할 것
+- **관리자 로그인 실패 시 400ms 지연(`setTimeout`)을 지웠다.** 서버리스는 요청마다 인스턴스가 따로 뜨므로 병렬 시도에는 아무 제약이 안 되고(순차 공격자만 느려진다), 실패마다 함수를 400ms 붙잡아 두는 쪽이 오히려 Hobby 함수 예산을 태우는 레버가 된다. 주석에 있던 "공유 저장소 없이 할 수 있는 최선"이라는 근거도 낡았다 — 지금은 Neon이 있고 상담 폼은 이미 DB 기준으로 제한한다. `ADMIN_PASSWORD`가 24자라 애초에 대입이 불가능하다. **진짜로 막아야 하면 `countRecentByIpHash` 패턴을 로그인에도 붙일 것**(HMAC 상수 시간 비교는 그대로 두었다 — 그건 제대로 된 코드다)
+- 손댈 게 없다고 판단한 것: first-load JS가 24개 라우트 전부 **152~157KB gzip**으로 평평하다(react-dom 69.9 + Next 라우터 34.8 ≈ 105KB가 프레임워크 바닥값, 라우트별 편차 1~5KB). 클라이언트 컴포넌트가 9개뿐이라 나온 결과다. CSS 27.3KB gzip 한 장, 홈 HTML 20.8KB gzip, 이미지 최대 330KB. DB 인덱스 4개가 실제 쿼리 3종을 정확히 덮고 `count(*) over()`로 왕복을 줄여 뒀다. **20/24 라우트가 정적이라 CDN 엣지에서 나가고 `sin1`도 Neon도 안 거친다** — 리전 선택은 상담 접수와 `/admin`에만 영향
+- 구조 문제로 남겨둔 것: `/admin`이 사이트 헤더·푸터(와 폰트 preload)를 물고 있다. 라우트 그룹 개편이 필요한데 사내 3페이지라 실익이 작다
+
+### SEO · 메타 (2026-08-23 작성, 2026-08-24 보강)
 
 - `src/app/sitemap.ts`(홈 + nav 17개, `/design-system`·`/api` 제외) · `src/app/robots.ts`(design-system·api 차단) · `next.config.ts` 리다이렉트 `/rental/:path*` → `/` (308, 기존 사이트에서 제거된 렌탈 솔루션)
 - OG 이미지: `src/app/opengraph-image.png`(1200×630) + `.alt.txt`. 원본은 `/design-system/og` 페이지 — 1200×630 뷰포트로 `#og-card`를 캡처(Next 개발 배지 `nextjs-portal`은 지운 뒤). 코덱스 히어로 이미지로 재캡처 완료(2026-08-24)
 - **페이지 메타는 반드시 `pageMetadata()`(`src/lib/metadata.ts`)로** — Next는 `openGraph` 같은 중첩 객체를 세그먼트 간 병합하지 않아서, 페이지가 `openGraph`를 직접 쓰면 루트의 siteName·locale·OG 이미지가 사라진다(실제로 그랬다). 홈만 루트 layout 메타 + 파일 규칙 이미지
 - 404: `src/app/not-found.tsx` — 코발트 스테이지 + 전체 메뉴. 프로덕션에서 404 상태 코드 확인
+
+**2026-08-24 보강 — 빌드 산출 HTML을 파싱해 22개 라우트를 실측하고 고쳤다.** 감사 스크립트는 세션 스크래치라 남아 있지 않지만, `.next/server/app/**/*.html`에서 title·description·canonical·og·h1·JSON-LD·alt를 뽑아 비교하는 방식이면 재현된다.
+
+- **홈에 canonical과 `og:url`이 아예 없었다** — 루트 layout에 `alternates: { canonical: "/" }`와 `openGraph.url`을 넣어 해결. 서브페이지 17개는 `pageMetadata()`가 각자 덮어쓰므로 충돌 없고, 덮어쓰지 않는 `/admin`·`/design-system`은 **`alternates: { canonical: null }`로 상속을 끊었다**(noindex인데 다른 URL을 canonical로 가리키면 모순된 신호)
+- **홈 title이 회사명 9자뿐이었다** — `site.ts`의 `seo.title`/`seo.description`을 새로 두고 루트 layout이 쓴다. "정책자금", "매출채권 팩토링" 같은 검색어가 홈에 하나도 없던 문제. `company.description`은 손대지 않았다
+- **구조화 데이터**(`src/lib/structured-data.ts` + `src/components/seo/json-ld.tsx`): 홈에 `Organization`(`@id` 있음, taxID=사업자등록번호, founder, address, areaServed) + `WebSite`(publisher가 Organization을 `@id`로 참조), 서브페이지 17개에 `BreadcrumbList`. `JsonLd`가 `<`를 이스케이프한다(데이터에 `</script>`가 섞이면 태그가 끊긴다)
+- **브레드크럼 버그를 구조화 데이터 작업 중에 발견해 같이 고쳤다** — nav의 `group.href`가 그룹의 첫 항목을 가리키다 보니 그 첫 항목 페이지에서 그룹 크럼이 **자기 자신으로 가는 죽은 링크**가 됐고, `/about/company`는 그룹명과 페이지명이 같아 **"Home › 회사소개 › 회사소개"** 로 나왔다. `SubHero`에서 `isGroupLanding`이면 그룹 크럼의 링크를 빼고(라벨이 같으면 크럼 자체를 합친다), JSON-LD는 그 단계를 통째로 뺀다 — **구글은 마지막이 아닌 항목에 `item`(URL)을 요구하는데 그룹에는 줄 고유 URL이 없기 때문**이다. 구조화 데이터가 화면과 달라도 되는 건 구글 문서로 확인
+- `robots`에 `max-image-preview: large`(안 넣으면 검색 결과 썸네일이 작게 잘린다), `viewport`에 `themeColor: #0B1E4D` + `colorScheme: light`
+- **사이트맵 `lastmod`를 `new Date()`에서 `site.ts`의 `contentRevised`로 바꿨다** — 빌드 시각을 쓰면 배포할 때마다 "전 페이지가 방금 바뀌었다"고 알리는 셈이라 크롤러가 lastmod 자체를 신뢰하지 않게 된다. **본문을 실제로 고칠 때 이 값을 올릴 것**
+- **`site.ts`의 `searchConsole.naver`/`.google`은 빈 값이다** — 네이버 서치어드바이저·구글 서치콘솔에서 소유확인 코드를 받아 채우면 메타 태그가 자동으로 붙는다. 비어 있으면 태그 자체가 렌더되지 않는다
+- 손대지 않은 것: 서브페이지 17개의 title(16~20자)·description(90~141자)은 이미 전부 고유하고 길이도 적정. h1도 페이지당 1개, `alt` 없는 `<img>` 0개(장식용 `alt=""`는 헤더 로고 — WCAG 2.5.3 대응으로 의도된 것)
+- **일부러 안 넣은 것**: 자금 페이지 11개에 `Service`/`FinancialProduct` 스키마. 구글이 이 타입으로 리치 결과를 주지 않아 이득이 거의 없고, 얇은 데이터로 마크업을 늘리면 오히려 위험하다. `Organization`의 `contactPoint`·`sameAs`도 대표 전화·SNS가 확인되지 않아 비워 뒀다(`structured-data.ts`에 `TODO(client)`)
+- `/_global-error`만 canonical·description이 없는데, Next 내부 오류 경계 페이지라 크롤되지 않고 사이트맵에도 없다 — 그대로 둔다
 
 ### 고객지원 2페이지 (2026-08-23)
 

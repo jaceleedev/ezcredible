@@ -78,6 +78,33 @@ export const nav: NavGroup[] = [
 
 export const consultationHref = "/support/consultation";
 
+/**
+ * 검색 결과에 뜨는 홈 제목·설명. company.name/description과 따로 두는 이유는
+ * 홈이 브랜드명만으로는 "정책자금", "매출채권 팩토링" 같은 검색어에 걸리지 않기 때문이다.
+ * 서브페이지는 각 content/pages/*.ts의 title·metaDescription을 쓴다.
+ */
+export const seo = {
+  title: "(주)이지크레더블 | 정책자금·유동성자금 기업금융 컨설팅",
+  description:
+    "중소기업·소상공인을 위한 정책자금, 매출채권 팩토링·전자어음할인 등 유동성자금, 기업신용평가·기업인증 성장 솔루션을 제공하는 기업금융 컨설팅 회사입니다.",
+} as const;
+
+/**
+ * 검색엔진 소유확인 코드. 네이버 서치어드바이저 / 구글 서치콘솔에서 받아 채운다.
+ * 비어 있으면 메타 태그를 아예 렌더하지 않는다.
+ */
+export const searchConsole = {
+  naver: "",
+  google: "",
+} as const;
+
+/**
+ * 사이트맵 lastmod에 쓰는 콘텐츠 개정일(YYYY-MM-DD).
+ * new Date()를 쓰면 배포할 때마다 "전 페이지가 방금 바뀌었다"고 알리는 셈이라
+ * 크롤러가 lastmod 자체를 신뢰하지 않게 된다. 본문을 실제로 고칠 때 이 값을 올린다.
+ */
+export const contentRevised = "2026-08-24";
+
 /** 개인정보 보호책임자 — 개인정보처리방침 제12조에 렌더된다. 확인된 연락처만 표시한다. */
 export const privacyOfficer: { name: string; title: string; email: string; phone: string } = {
   name: "이주환",

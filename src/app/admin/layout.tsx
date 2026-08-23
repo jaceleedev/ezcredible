@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "상담 관리",
   robots: { index: false, follow: false, nocache: true },
+  // 루트의 자기참조 canonical("/")을 물려받지 않게 끊는다 — noindex와 같이 쓰면 모순된 신호다
+  alternates: { canonical: null },
 };
 
 export default function AdminLayout({ children }: LayoutProps<"/admin">) {

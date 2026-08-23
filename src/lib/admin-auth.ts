@@ -52,15 +52,17 @@ export async function isAdminAuthenticated() {
 }
 
 /**
- * 비밀번호 확인. 원문을 직접 비교하지 않고 HMAC 결과를 상수 시간 비교하며,
- * 실패 시 지연을 넣어 대입 공격 속도를 낮춘다(공유 저장소 없이 할 수 있는 최선).
+ * 비밀번호 확인. 원문을 직접 비교하지 않고 HMAC 결과를 상수 시간 비교한다.
+ *
+ * 실패 시 지연(setTimeout)은 넣지 않는다 — 서버리스에서는 요청마다 인스턴스가 따로 뜨므로
+ * 병렬 시도에는 아무 제약이 안 되고(순차 공격자만 느려진다), 실패할 때마다 함수를
+ * 400ms씩 붙잡아 두는 쪽이 오히려 공격자에게 유리하다. 상담 폼처럼 실제로 막아야 하면
+ * consultations-repo의 DB 기준 카운트를 쓸 것.
  */
 export async function verifyAdminPassword(password: string) {
   const expected = process.env.ADMIN_PASSWORD;
   if (!expected || !password) return false;
 
   const [given, target] = await Promise.all([hmacHex(sessionSecret(), password), hmacHex(sessionSecret(), expected)]);
-  const ok = timingSafeEqual(given, target);
-  if (!ok) await new Promise((resolve) => setTimeout(resolve, 400));
-  return ok;
+  return timingSafeEqual(given, target);
 }

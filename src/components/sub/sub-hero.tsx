@@ -8,6 +8,8 @@ import { Container } from "@/components/ui/container";
 import { Halftone } from "@/components/ui/halftone";
 import { SubNav } from "@/components/ui/sub-nav";
 import { DevLabel } from "@/components/home/dev-label";
+import { JsonLd } from "@/components/seo/json-ld";
+import { breadcrumbLd } from "@/lib/structured-data";
 
 type SubHeroProps = {
   /** 현재 페이지 경로. 브레드크럼·서브내비 활성 항목을 site.ts의 nav에서 찾는다 */
@@ -37,13 +39,30 @@ function topicOf(groupHref: string): ConsultationTopic | undefined {
 export function SubHero({ href, title, subtitle, image, imageLabel, hideSubNav = false, className }: SubHeroProps) {
   const group = nav.find((g) => g.items.some((item) => item.href === href));
   const current = group?.items.find((item) => item.href === href);
+  const currentLabel = current?.label ?? (typeof title === "string" ? title : "");
+
+  // 그룹은 전용 페이지가 없고 nav의 group.href는 그룹의 첫 항목을 가리킨다.
+  // 그래서 그 첫 항목 페이지에서는 그룹 크럼이 자기 자신을 가리키게 된다(죽은 링크).
+  // 회사소개처럼 그룹명과 페이지명이 같으면 "회사소개 › 회사소개"로 두 번 나오기까지 했다.
+  const isGroupLanding = group?.href === href;
   const crumbs = [
-    ...(group ? [{ label: group.label, href: group.href }] : []),
-    { label: current?.label ?? (typeof title === "string" ? title : "") },
+    ...(group && group.label !== currentLabel
+      ? [{ label: group.label, href: isGroupLanding ? undefined : group.href }]
+      : []),
+    { label: currentLabel },
+  ];
+
+  // 구조화 데이터는 화면과 달라도 되지만(구글 문서), 마지막이 아닌 항목에는 item(URL)이 반드시 있어야 한다.
+  // 그룹 첫 항목 페이지에서는 그 단계에 줄 고유 URL이 없으므로 아예 빼고 Home › 현재 페이지로 내보낸다.
+  const ldCrumbs = [
+    ...(group && !isGroupLanding ? [{ label: group.label, href: group.href }] : []),
+    { label: currentLabel },
   ];
 
   return (
     <div className={cn("relative", className)}>
+      {/* 화면에 그리는 브레드크럼과 같은 항목을 구조화 데이터로도 내보낸다 */}
+      <JsonLd data={breadcrumbLd(ldCrumbs)} />
       <section className={cn("relative overflow-hidden text-white", image ? "bg-navy" : "stage-cobalt")}>
         {image ? (
           <>

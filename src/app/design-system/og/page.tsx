@@ -7,6 +7,7 @@ import { company } from "@/content/site";
 export const metadata: Metadata = {
   title: "OG 이미지 카드",
   robots: { index: false, follow: false },
+  alternates: { canonical: null },
 };
 
 /**
