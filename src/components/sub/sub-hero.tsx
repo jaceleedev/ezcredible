@@ -1,7 +1,7 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
-import { consultationHref, nav } from "@/content/site";
+import { consultationHref, consultationLink, nav, type ConsultationTopic } from "@/content/site";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
@@ -22,6 +22,12 @@ type SubHeroProps = {
   hideSubNav?: boolean;
   className?: string;
 };
+
+/** 그룹 경로(/policy-funds/...)를 상담 폼의 희망 솔루션 값으로 */
+function topicOf(groupHref: string): ConsultationTopic | undefined {
+  const seg = groupHref.split("/")[1];
+  return seg === "policy-funds" || seg === "liquidity-funds" || seg === "growth" ? seg : undefined;
+}
 
 /**
  * 서브페이지 배너. 사진 + 네이비 오버레이 + 하프톤 위에 브레드크럼·h1·부제가 놓이고,
@@ -69,10 +75,13 @@ export function SubHero({ href, title, subtitle, image, imageLabel, hideSubNav =
           <SubNav
             items={group.items}
             current={href}
+            // 상담신청 페이지 자체에서는 같은 페이지로 가는 버튼을 보이지 않는다
             action={
-              <Button variant="navy" size="sm" href={consultationHref}>
-                빠른 상담신청
-              </Button>
+              href === consultationHref ? undefined : (
+                <Button variant="navy" size="sm" href={consultationLink(topicOf(group.href))}>
+                  빠른 상담신청
+                </Button>
+              )
             }
           />
         </Container>
