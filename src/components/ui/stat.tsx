@@ -19,7 +19,7 @@ type StatProps = {
 
 export function Stat({ label, value, unit, prefix, plain = false, tone = "dark", compact = false, className }: StatProps) {
   const dark = tone === "dark";
-  // "3조 3,620억"처럼 긴 문자열은 compact에서 한 단계 작게 — 4열 칸(≈264px)에 맞춘다
+  // "3조 3,620억"·"입찰·자금·거래"처럼 긴 문자열은 compact에서 작게 — 1200폭의 4열 칸(≈228px)에도 들어가야 한다
   const long = typeof value === "string" && value.length > 6;
   return (
     <div className={cn("flex flex-col gap-3", className)}>
@@ -28,7 +28,7 @@ export function Stat({ label, value, unit, prefix, plain = false, tone = "dark",
         <span
           className={cn(
             "font-display font-extrabold whitespace-nowrap tabular-nums",
-            compact ? (long ? "text-[1.75rem] leading-none tracking-[-0.02em] sm:text-[2.4rem]" : "text-[1.75rem] leading-none tracking-[-0.02em] sm:text-stat") : "text-stat",
+            compact ? (long ? "text-[1.75rem] leading-none tracking-[-0.02em] sm:text-[2rem]" : "text-[1.75rem] leading-none tracking-[-0.02em] sm:text-stat") : "text-stat",
             dark ? "text-white" : "text-ink",
           )}
         >

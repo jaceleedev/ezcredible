@@ -13,6 +13,8 @@ type DataTableProps = {
   note?: ReactNode;
   /** 좁은 화면에서 가로 스크롤이 시작되는 최소 폭 */
   minWidth?: string;
+  /** 열 너비(colgroup). 병합 셀이 있는 표는 자동 배분이 어색해서 직접 준다 */
+  columnWidths?: string[];
   className?: string;
 };
 
@@ -24,11 +26,18 @@ function isCellObject(cell: Cell): cell is { content: ReactNode; rowSpan?: numbe
  * 다열 표 — 비교표·등급표·자금별 조건표. KeyValueTable(2열)과 같은 스타일이고,
  * 모바일에서는 표 자체가 가로로 스크롤된다(페이지는 가로로 움직이지 않는다).
  */
-export function DataTable({ columns, rows, rowHeader = true, note, minWidth = "640px", className }: DataTableProps) {
+export function DataTable({ columns, rows, rowHeader = true, note, minWidth = "640px", columnWidths, className }: DataTableProps) {
   return (
     <div className={cn("flex flex-col gap-3", className)}>
       <div className="overflow-x-auto rounded-3xl border border-line [scrollbar-width:thin]">
         <table className="w-full border-collapse text-[15px]" style={{ minWidth }}>
+          {columnWidths && (
+            <colgroup>
+              {columnWidths.map((width, i) => (
+                <col key={i} style={{ width }} />
+              ))}
+            </colgroup>
+          )}
           <thead>
             <tr className="bg-soft text-left text-cobalt-700">
               {columns.map((col, i) => (

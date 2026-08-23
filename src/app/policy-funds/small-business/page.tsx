@@ -70,6 +70,7 @@ export default function SmallBusinessFundsPage() {
               }),
               ["합계", "", "", <span key="total" className="font-extrabold text-brand-strong tabular-nums">33,620</span>],
             ]}
+            columnWidths={["20%", "26%", "38%", "16%"]}
             minWidth="760px"
             note="출처: 2026년 중소벤처기업부 소상공인 정책자금 융자사업 공고(제2025-656호). 자금은 예산 소진 시까지 접수합니다."
           />
