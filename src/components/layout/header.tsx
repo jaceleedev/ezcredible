@@ -32,8 +32,7 @@ export function Header() {
     };
   }, [open]);
 
-  // 관리자 화면은 어두운 배너 없이 흰 바탕으로 시작하므로 투명 헤더면 흰 로고가 보이지 않는다
-  const solid = scrolled || open || pathname.startsWith("/admin");
+  const solid = scrolled || open;
 
   return (
     <>

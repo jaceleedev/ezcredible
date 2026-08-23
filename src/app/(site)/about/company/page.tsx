@@ -36,7 +36,7 @@ export default function CompanyPage() {
             src="/images/services/expert.png"
             alt="말풍선 옆의 기업 금융 전문가"
             aspect="photo"
-            sizes="(min-width: 1024px) 480px, 100vw"
+            sizes="(min-width: 560px) 480px, 100vw"
             className="rounded-[28px] shadow-card"
           />
         }

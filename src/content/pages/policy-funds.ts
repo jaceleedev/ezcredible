@@ -142,7 +142,7 @@ export const operating: FundPage = {
   facts: [
     { label: "2026년 융자 규모", value: kosmes.scale, unit: "원" },
     { label: "운전자금 연간 한도", value: kosmes.workingLimit, unit: "억 원 이내" },
-    { label: "대출기간", value: kosmes.workingTerm, unit: "년 이내 · 거치 2년" },
+    { label: "대출기간", value: kosmes.workingTerm, unit: "년 이내", sub: "거치기간 2년" },
     { label: "기업당 총 한도", value: kosmes.limitPerCompany, unit: "원" },
   ],
   features: [
@@ -209,7 +209,7 @@ export const facility: FundPage = {
   facts: [
     { label: "기업당 융자한도", value: kosmes.limitPerCompany, unit: "원 이내" },
     { label: "대출기간", value: kosmes.facilityTerm, unit: "년 이내" },
-    { label: "거치기간", value: 4, unit: "년 이내 · 담보 기준" },
+    { label: "거치기간", value: 4, unit: "년 이내", sub: "담보 기준 · 신용 3년" },
     { label: "협동화·스마트화 한도", value: 100, unit: "억 원" },
   ],
   features: [
@@ -271,9 +271,9 @@ export const smallBusiness: FundPage = {
   facts: [
     { label: "2026년 공급 규모", value: "3조 3,620억", unit: "원" },
     { label: "기업당 운전자금 한도", value: 5, unit: "억 원 이내" },
-    { label: "일반경영안정자금", value: 7000, unit: "만 원 · 연간" },
+    { label: "일반경영안정자금", value: 7000, unit: "만 원", sub: "연간 한도" },
     // QUARTERLY: 2026년 3분기 정책자금 기준금리. 분기마다 semas.or.kr에서 갱신
-    { label: "정책자금 기준금리", value: "3.85", unit: "% · 2026년 3분기" },
+    { label: "정책자금 기준금리", value: "3.85", unit: "%", sub: "2026년 3분기 기준" },
   ],
   features: [
     {
@@ -369,7 +369,7 @@ export const b2bPurchase: FundPage = {
   summary:
     "물품 구매대금을 외상으로 미루는 대신 보증서 한도 안에서 은행이 판매기업에 바로 지급하고, 구매기업은 만기일에 은행에 상환합니다. 거래는 보증기관과 협약한 e-Marketplace(MP)를 통해 이루어지며, 이지크레더블은 MP 영업대행사로서 한도 책정부터 실제 결제까지 도와드립니다.",
   facts: [
-    { label: "대출만기", value: 180, unit: "일 · 최장", plain: true },
+    { label: "대출만기 · 최장", value: 180, unit: "일", plain: true },
     { label: "판매기업 결제", value: "즉시", unit: "현금" },
     { label: "취급은행", value: 14, unit: "곳", plain: true },
     { label: "보증기관", value: "신보·기보", unit: "" },

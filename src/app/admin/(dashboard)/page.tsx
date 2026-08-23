@@ -5,8 +5,8 @@ import { consultationStatuses, countByStatus, isConsultationStatus, listConsulta
 import { formatKst } from "@/lib/format-date";
 import { isDbConfigured } from "@/lib/db";
 import { cn } from "@/lib/cn";
-import { logoutAction } from "./actions";
-import { StatusBadge } from "./status-badge";
+import { ChevronRight } from "@/components/ui/icons";
+import { StatusBadge } from "../status-badge";
 
 const PER_PAGE = 20;
 
@@ -16,6 +16,7 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
   const sp = await searchParams;
   const statusParam = typeof sp.status === "string" && isConsultationStatus(sp.status) ? sp.status : null;
   const page = Math.max(1, Number(typeof sp.page === "string" ? sp.page : "1") || 1);
+  const deleted = sp.deleted === "1";
 
   if (!isDbConfigured()) {
     return (
@@ -31,6 +32,7 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
   ]);
   const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
   const allCount = Object.values(counts).reduce((sum, n) => sum + n, 0);
+  const newCount = counts.new ?? 0;
 
   const tabs = [
     { value: null, label: "전체", count: allCount },
@@ -48,56 +50,72 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
 
   return (
     <>
-      <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="font-display text-h3 text-ink">상담 신청</h1>
-          <p className="mt-1 text-sm text-muted">전체 {allCount}건</p>
-        </div>
-        <form action={logoutAction}>
-          <button type="submit" className="rounded-lg border border-line-strong px-3 py-2 text-sm text-body transition hover:bg-soft">
-            로그아웃
-          </button>
-        </form>
+      <header className="mb-7">
+        <h1 className="font-display text-h3 text-ink">상담 신청</h1>
+        <p className="mt-1.5 text-sm text-muted">
+          전체 {allCount}건
+          {newCount > 0 && (
+            <>
+              {" · "}
+              <span className="font-semibold text-cobalt-600">신규 {newCount}건</span>
+            </>
+          )}
+        </p>
       </header>
 
-      <nav className="mb-6 flex flex-wrap gap-2">
+      {deleted && (
+        <p className="mb-5 rounded-xl border border-line-strong bg-white px-4 py-3 text-sm font-medium text-body">접수를 삭제했습니다.</p>
+      )}
+
+      <nav aria-label="상태 필터" className="mb-5 flex flex-wrap gap-2">
         {tabs.map((tab) => {
           const active = tab.value === statusParam;
           return (
             <Link
               key={tab.label}
               href={href({ status: tab.value, page: 1 })}
+              aria-current={active ? "page" : undefined}
               className={cn(
-                "rounded-full px-3.5 py-1.5 text-sm font-medium transition",
-                active ? "bg-cobalt-600 text-white" : "border border-line-strong text-body hover:bg-soft",
+                "inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-semibold transition",
+                active
+                  ? "bg-cobalt-600 text-white shadow-[0_6px_16px_-8px_rgba(46,90,214,0.9)]"
+                  : "border border-line-strong bg-white text-body hover:border-cobalt-200 hover:bg-soft hover:text-brand-strong",
               )}
             >
-              {tab.label} <span className={cn("ml-1", active ? "text-cobalt-100" : "text-muted")}>{tab.count}</span>
+              {tab.label}
+              <span className={cn("tabular-nums", active ? "text-cobalt-100" : "text-muted")}>{tab.count}</span>
             </Link>
           );
         })}
       </nav>
 
       {rows.length === 0 ? (
-        <p className="rounded-xl border border-line bg-soft-2 px-4 py-10 text-center text-sm text-muted">아직 접수된 상담이 없습니다.</p>
+        <p className="rounded-2xl border border-line bg-white px-4 py-14 text-center text-sm text-muted">
+          {statusParam ? `'${statusLabels[statusParam]}' 상태인 상담이 없습니다.` : "아직 접수된 상담이 없습니다."}
+        </p>
       ) : (
-        <ul className="overflow-hidden rounded-xl border border-line">
+        <ul className="overflow-hidden rounded-2xl border border-line bg-white shadow-soft">
           {rows.map((row) => (
             <li key={row.id} className="border-b border-line last:border-b-0">
               <Link
                 href={`/admin/${row.id}`}
-                className="grid gap-1 px-4 py-4 transition hover:bg-soft-2 sm:grid-cols-[9.5rem_1fr_9rem_5rem] sm:items-center sm:gap-4"
+                className="group grid gap-1.5 px-5 py-4 transition hover:bg-soft-2 sm:grid-cols-[10rem_minmax(0,1fr)_9rem_5rem_1rem] sm:items-center sm:gap-4"
               >
-                <span className="text-xs text-muted sm:text-sm">{formatKst(row.createdAt)}</span>
+                <span className="text-xs text-muted tabular-nums sm:text-[13px]">{formatKst(row.createdAt)}</span>
                 <span className="min-w-0">
                   <span className="block truncate font-semibold text-ink">
                     {row.company} · {row.name} {row.position}
-                    {row.notifyError && <span title="알림 메일 실패" className="ml-1.5 text-gold-500">⚠</span>}
+                    {row.notifyError && (
+                      <span title="알림 메일 실패" className="ml-1.5 text-gold-500">
+                        ⚠
+                      </span>
+                    )}
                   </span>
-                  <span className="block truncate text-xs text-muted">{row.topicLabel}</span>
+                  <span className="mt-0.5 block truncate text-xs text-muted">{row.topicLabel}</span>
                 </span>
-                <span className="text-sm text-body tabular-nums">{row.phone}</span>
+                <span className="text-sm font-medium text-body tabular-nums">{row.phone}</span>
                 <StatusBadge status={row.status} className="justify-self-start sm:justify-self-end" />
+                <ChevronRight size={16} className="hidden text-slate-300 transition group-hover:text-cobalt-500 sm:block" />
               </Link>
             </li>
           ))}
@@ -105,17 +123,23 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
       )}
 
       {totalPages > 1 && (
-        <nav className="mt-6 flex items-center justify-center gap-2 text-sm">
+        <nav aria-label="페이지" className="mt-6 flex items-center justify-center gap-2 text-sm">
           {page > 1 && (
-            <Link href={href({ page: page - 1 })} className="rounded-lg border border-line-strong px-3 py-2 text-body hover:bg-soft">
+            <Link
+              href={href({ page: page - 1 })}
+              className="rounded-xl border border-line-strong bg-white px-3.5 py-2 font-medium text-body transition hover:bg-soft"
+            >
               이전
             </Link>
           )}
-          <span className="px-2 text-muted">
+          <span className="px-2 text-muted tabular-nums">
             {page} / {totalPages}
           </span>
           {page < totalPages && (
-            <Link href={href({ page: page + 1 })} className="rounded-lg border border-line-strong px-3 py-2 text-body hover:bg-soft">
+            <Link
+              href={href({ page: page + 1 })}
+              className="rounded-xl border border-line-strong bg-white px-3.5 py-2 font-medium text-body transition hover:bg-soft"
+            >
               다음
             </Link>
           )}

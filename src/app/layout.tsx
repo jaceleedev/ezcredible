@@ -2,9 +2,6 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { company, searchConsole, seo } from "@/content/site";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
-import { MotionRoot } from "@/components/motion/motion-root";
 
 /** 헤드라인 전용 SUIT. 본문 Pretendard는 globals.css의 동적 서브셋 @font-face로 로드된다. */
 const suit = localFont({
@@ -55,13 +52,11 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
+  // 헤더·푸터(사이트 셸)는 (site) 레이아웃이 입힌다 — /admin은 전용 대시보드 셸을 쓴다
   return (
     <html lang="ko" className={`${suit.variable} h-full`}>
       <body id="top" className="flex min-h-full flex-col">
-        <MotionRoot />
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        {children}
       </body>
     </html>
   );

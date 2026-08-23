@@ -8,8 +8,12 @@ export const metadata: Metadata = {
   alternates: { canonical: null },
 };
 
+/**
+ * /admin 공통 레이아웃은 메타데이터만 맡는다.
+ * 화면 셸은 로그인 전후가 달라서 아래에서 나뉜다:
+ * - (dashboard)/layout.tsx — 사이드바 대시보드 (인증된 화면)
+ * - login/page.tsx — 가운데 정렬 로그인 카드
+ */
 export default function AdminLayout({ children }: LayoutProps<"/admin">) {
-  // 헤더가 fixed(72px, lg에서 88px)라 상단 여백으로 직접 비켜준다.
-  // 서브페이지는 배너가 그 자리를 채우지만 관리자 화면은 배너가 없어 제목이 헤더에 가린다.
-  return <div className="mx-auto w-full max-w-5xl px-5 pt-28 pb-14 sm:px-8 lg:pt-36 lg:pb-20">{children}</div>;
+  return children;
 }

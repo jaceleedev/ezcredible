@@ -30,7 +30,7 @@ export default function HistoryPage() {
             src="/images/solutions/growth.png"
             alt="시간에 따른 성장을 상징하는 상승 그래프"
             aspect="photo"
-            sizes="(min-width: 1024px) 480px, 100vw"
+            sizes="(min-width: 560px) 480px, 100vw"
             className="rounded-[28px] shadow-card"
           />
         }

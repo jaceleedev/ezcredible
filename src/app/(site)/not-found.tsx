@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { SiteShell } from "@/components/layout/site-shell";
 import { NotFoundView } from "@/components/layout/not-found-view";
 
 export const metadata: Metadata = {
@@ -9,15 +8,7 @@ export const metadata: Metadata = {
   alternates: { canonical: null },
 };
 
-/**
- * 전역 404 — 어떤 라우트에도 안 걸린 URL은 루트 레이아웃(셸 없음) 안에서 이 파일이 렌더된다.
- * 그래서 사이트 셸을 직접 입는다. (site) 안에서 notFound()가 던져지면
- * (site)/not-found.tsx가 대신 렌더되므로 셸이 겹치지 않는다.
- */
+/** (site) 세그먼트 안에서 notFound()가 던져졌을 때 — 셸은 (site) 레이아웃이 이미 입혀 준다 */
 export default function NotFound() {
-  return (
-    <SiteShell>
-      <NotFoundView />
-    </SiteShell>
-  );
+  return <NotFoundView />;
 }

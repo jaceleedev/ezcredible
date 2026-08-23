@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { loginAction, type LoginState } from "../actions";
+import { fieldBase, fieldLabel } from "../field-styles";
 
 const initialState: LoginState = { message: "" };
 
@@ -9,10 +10,28 @@ export function LoginForm() {
   const [state, formAction, pending] = useActionState(loginAction, initialState);
 
   return (
-    <form action={formAction} className="space-y-4">
+    <form action={formAction} className="flex flex-col gap-4">
       <div>
-        <label htmlFor="password" className="mb-2 block text-sm font-semibold text-ink">
-          관리자 비밀번호
+        <label htmlFor="email" className={fieldLabel}>
+          이메일
+        </label>
+        {/* autoComplete="username"이어야 비밀번호 관리자가 이 폼을 로그인으로 인식하고 한 쌍으로 저장한다 */}
+        <input
+          id="email"
+          name="email"
+          type="email"
+          autoComplete="username"
+          required
+          autoFocus
+          spellCheck={false}
+          aria-describedby="login-error"
+          className={fieldBase}
+        />
+      </div>
+
+      <div>
+        <label htmlFor="password" className={fieldLabel}>
+          비밀번호
         </label>
         <input
           id="password"
@@ -20,12 +39,12 @@ export function LoginForm() {
           type="password"
           autoComplete="current-password"
           required
-          autoFocus
-          className="w-full rounded-xl border border-line-strong bg-white px-4 py-3 text-ink outline-none transition focus:border-cobalt-500 focus:ring-2 focus:ring-cobalt-200"
+          aria-describedby="login-error"
+          className={fieldBase}
         />
       </div>
 
-      <p aria-live="polite" className="min-h-5 text-sm text-red-600">
+      <p id="login-error" aria-live="polite" className="min-h-5 text-[13px] leading-relaxed font-medium text-rose-600">
         {state.message}
       </p>
 

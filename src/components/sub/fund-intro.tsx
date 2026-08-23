@@ -23,7 +23,7 @@ export function FundIntro({ page, title }: { page: FundPage; title?: string }) {
             alt={page.image?.alt ?? page.title}
             aspect="photo"
             label="3D 이미지 자리 · 코덱스"
-            sizes="(min-width: 1024px) 480px, 100vw"
+            sizes="(min-width: 560px) 480px, 100vw"
             className="rounded-[28px] shadow-card"
           />
         }

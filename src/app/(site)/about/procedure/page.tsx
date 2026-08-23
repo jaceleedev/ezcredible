@@ -28,7 +28,7 @@ export default function ProcedurePage() {
             src="/images/services/checklist.png"
             alt="체크리스트로 절차를 관리하는 전문가"
             aspect="photo"
-            sizes="(min-width: 1024px) 480px, 100vw"
+            sizes="(min-width: 560px) 480px, 100vw"
             className="rounded-[28px] shadow-card"
           />
         }

@@ -153,6 +153,13 @@ export async function updateConsultationStatus(id: number, status: ConsultationS
   await sql`update consultations set status = ${status} where id = ${id}`;
 }
 
+/** 접수 삭제. 메모는 consultation_notes의 on delete cascade로 함께 지워진다 */
+export async function deleteConsultation(id: number) {
+  const sql = getSql();
+  if (!sql) throw new Error("DATABASE_URL 환경변수가 없습니다.");
+  await sql`delete from consultations where id = ${id}`;
+}
+
 export type ConsultationNote = { id: number; body: string; createdAt: string };
 
 /** 상담 경과 메모 — 최신순 */

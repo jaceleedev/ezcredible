@@ -327,8 +327,8 @@ export default function DesignSystemPage() {
             facts={[
               { label: "2026년 융자 규모", value: "4조 643억", unit: "원" },
               { label: "운전자금 연간 한도", value: 5, unit: "억 원 이내" },
-              { label: "대출기간", value: 5, unit: "년 이내 · 거치 2년" },
-              { label: "기업당 총 한도", value: "60억", unit: "원" },
+              { label: "대출기간", value: 5, unit: "년 이내", sub: "거치기간 2년" },
+              { label: "기업당 총 한도", value: "60억", unit: "원", sub: "지방소재 70억 · 우대기업 100억" },
             ]}
           />
           <FeatureCards

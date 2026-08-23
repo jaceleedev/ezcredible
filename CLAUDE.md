@@ -14,10 +14,10 @@ www.ezcredible.com(한국 B2B 기업금융 컨설팅: 정책자금 · 유동성�
 - 보고 전 검사: `pnpm exec tsc --noEmit` → `pnpm lint` → `pnpm build`, 그리고 브라우저에서 **1200 / 1440 / 1920 / 390** 폭 확인
   (1200에서만 보고 넘겼다가 넓은 화면에서 히어로가 어긋난 적이 있다)
 
-## 현재 상태 (2026-08-24 기준) — 코드 전부 완료, 계정 생성 + 배포만 남음
+## 현재 상태 (2026-08-24 기준) — 코드 완료 + Vercel 프로덕션 가동, 도메인 연결만 남음
 
-완료: 디자인 시스템(`/design-system`, noindex) · 홈 · **서브페이지 17/17** · 404 · sitemap · robots · OG 이미지 · 렌탈 리다이렉트 · **코덱스 3D 이미지 21장**(`675037b`) · **상담 저장·알림·관리자 페이지**(아래)
-마지막 커밋 `1d22060`. 상담 백엔드 작업은 아직 커밋 전.
+완료: 디자인 시스템(`/design-system`, noindex) · 홈 · **서브페이지 17/17** · 404 · sitemap · robots · OG 이미지 · 렌탈 리다이렉트 · **코덱스 3D 이미지 21장**(`675037b`) · **상담 저장·알림·관리자 페이지**(`2392272`) · **Vercel 배포 + 폼→저장→메일→admin 전 구간 검증**(아래 "배포 상태")
+마지막 커밋 `4b2537e`. **2026-08-24 2차 작업(FactStrip 타이포 통일 · 01 이미지 캡 · admin 대시보드 분리 — 아래 절)은 아직 커밋 전.**
 
 ### 인프라 확정 (2026-08-24, Jace 결정) — 전부 무료 구간
 
@@ -30,19 +30,52 @@ www.ezcredible.com(한국 B2B 기업금융 컨설팅: 정책자금 · 유동성�
 검토 후 기각: Cloudflare Workers(월 $5, 상업적 사용 OK·서울 엣지지만 새 스택 학습 부담) · Netlify Free(크레딧 300 소진 시 사이트 정지) · Supabase(무료는 7일 비활동 시 일시정지, Pro $25).
 카카오 알림톡은 건당 8~13원 + 비즈채널 심사 + 대행사 계약이라 제외.
 
+### 배포 상태 (2026-08-24) — Vercel 프로덕션 가동, 폼 전 구간 검증 완료
+
+- **Production URL: https://ezcredible-blond.vercel.app** (카페24 DNS 접근 전 임시 주소). 배포는 Vercel 대시보드로(이 맥에 CLI 없음)
+- pnpm 11.22는 `ENABLE_EXPERIMENTAL_COREPACK=1`(3개 환경 전부)로 해결 — 빌드 로그 "using pnpm v11.22.0" 확인
+- **Neon 브랜치를 dev / production으로 분리했다(Jace 설계)**: `.env.local` = dev 브랜치, Vercel = production 브랜치.
+  **로컬에서 프로덕션 데이터가 안 보이는 게 정상**이며, "Vercel에 .env.local 값 그대로"라던 예전 지침은 `DATABASE_URL`에는 해당 없음
+- Vercel 환경변수는 **Production만 체크**(프리뷰 배포가 운영 DB에 쓰지 않게): `DATABASE_URL`(production 브랜치) `RESEND_API_KEY` `CONSULTATION_NOTIFY_TO`(Jace 주소 하나) `ADMIN_PASSWORD` `ADMIN_SESSION_SECRET` `IP_HASH_SECRET` + `ENABLE_EXPERIMENTAL_COREPACK`(이것만 3개 환경).
+  `CONSULTATION_NOTIFY_FROM`은 도메인 인증 후 추가. **`CONSULTATION_REPLY_TO`는 키 자체를 제거했다(2026-08-24)** — 폼이 고객 이메일을 안 받아 답장 시나리오가 없다. 코드는 계속 지원하므로(빈 값이면 헤더 생략) 여러 명이 수신하게 되면 그때 다시 넣으면 된다
+- **검증 완료(2026-08-24)**: 프로덕션 폼 1건 제출 → 저장 + 알림 메일 수신(스팸 아님, timestamp 정상) + admin 노출 전부 확인.
+  테스트 행 1건("테스트" / 010-0000-0000 / 설명서 스타일 문의)은 대표님 인수인계 안내 겸 production에 남겨 둠. dev 브랜치에도 같은 내용 1건(Jace 확인용)
+- **삽질 기록 — Resend 422 `Invalid 'to' field. The email address contains non-ASCII characters.`**: Vercel 대시보드에 이메일 값을 넣을 때 전각 ＠(U+FF20)나 복사-붙여넣기에 딸려온 보이지 않는 문자가 섞이면 발송이 전량 실패한다. **값은 영문 입력 모드로 직접 타이핑**할 것. 이때 notify_error → admin 목록 ⚠ 안전망이 설계대로 동작하는 것도 실확인했다
+- 알림 메일의 "관리자 페이지에서 보기" 버튼은 www.ezcredible.com 기준 URL이라 도메인 연결 전엔 안 열린다(정상)
+- **⚠ 다음 배포 전에 Vercel 환경변수에 `ADMIN_EMAIL`을 추가할 것**(2026-08-24 신설). 없으면 배포 직후 `/admin`에 아무도 못 들어간다 — 로그인 화면이 빠진 변수 이름을 알려 준다
+- **⚠ 다음 배포 때 production 브랜치에 `db/schema.sql`을 다시 실행할 것** — `admin_access_log`(로그인 rate limit·접속기록) 테이블이 새로 생겼다. 멱등이라 전체를 그대로 붙여넣으면 된다. 안 해도 로그인은 정상 동작하지만(설계상 DB 실패에 걸지 않는다) rate limit과 접속기록만 동작하지 않는다. dev 브랜치에는 적용 완료
+
+### 2026-08-24 2차 작업 — FactStrip 통일 · 01 이미지 캡 · admin 대시보드 분리 (커밋 전)
+
+- **Stat/FactStrip 타이포 통일**(`stat.tsx`·`fact-strip.tsx`): compact(서브페이지 수치 칸) 값 크기를 **전 칸 동일 28px/xl 32px 한 단계로 고정**(길이별 분기 제거), **한글 포함 값만 8% 축소** — SUIT은 한글이 라틴·숫자보다 크게 그려져 같은 px면 한글만 도드라진다(광학 보정). `Fact`에 **`unit`(값 옆 짧은 단위, 절대 안 꺾임) / `sub`(값 아래 13px 회색 꼬리 정보)** 분리 — 콘텐츠 3개 파일의 긴 단위("곳 · NICE · KoDATA · 이크레더블" 등)를 전부 sub로 이관했다. **새 fact를 쓸 때 긴 단위는 unit이 아니라 sub에 넣을 것.** 모바일 1열 전환 휴리스틱은 한글 4자/라틴 8자 기준. 검증: FactStrip 있는 12페이지 × 390/960/1024/1200/1440/1920 iframe 실측 — 단위 줄바꿈·오버플로 0건
+- **01 섹션 이미지 캡**(`numbered-section.tsx`): aside(이미지 스테이지)가 lg 미만 1열에서 컨테이너 전폭으로 커져 800px 원본이 최대 4배 업스케일되던 문제 — **480px(데스크탑 열과 동일) 캡 + 중앙 정렬**. `sizes`는 `(min-width: 560px) 480px, 100vw`로 7곳 갱신
+- **라우트 그룹 분리**: 공개 페이지 전부 `src/app/(site)/`(`SiteShell` = MotionRoot+Header+main+Footer), 관리자는 `admin/(dashboard)/`(네이비 사이드바 셸 — 상담 신청 메뉴·사이트로 이동·로그아웃, 모바일은 상단 바) + `admin/login`(셸 밖 중앙 카드, "사이트로 돌아가기" 링크). **URL 전부 불변**, 사이트 20 라우트 정적 유지·admin 3개만 동적. `admin/layout.tsx`는 메타데이터(noindex·canonical null)만 남긴 통과 레이아웃, 대시보드 레이아웃이 인증 리다이렉트를 한 번 더 건다(페이지 체크는 유지 — 소프트 내비에서 레이아웃은 재렌더 안 되므로)
+- **404 셸 구조**: 전역 404(`app/not-found.tsx`)는 루트 레이아웃(셸 없음)에서 렌더되므로 SiteShell을 직접 입는다. `(site)/not-found.tsx`는 본문만(셸 겹침 방지), `admin/(dashboard)/not-found.tsx`는 없는 접수번호용. 404 두 파일 모두 `alternates: { canonical: null }`(admin과 같은 이유). 헤더의 `pathname.startsWith("/admin")` 분기는 삭제
+- 검증: tsc·lint·build 통과, 빌드 HTML에서 canonical·og 태그 이동 전과 동일 확인, admin 로그인→목록→상세→로그아웃·404 셸 스크린샷 확인
+- **관리자 로그인 rate limit + 접속기록**(`admin_access_log` 테이블 · `src/lib/admin-access-repo.ts`): 같은 IP 해시로 **10분 안에 연속 실패 5회면 차단**하고 남은 분을 알려 준다. **마지막 성공 이후의 실패만 센다** — 짧은 비밀번호를 쓰는 실사용자가 오타로 잠기지 않게. 한 테이블이 개인정보처리방침 제9조가 고지한 "접속기록 1년 이상 보관"의 실체를 겸한다(그 전까지는 방침에만 있고 구현이 없었다). IP는 상담과 같이 해시만 저장.
+  **DB 실패에 절대 로그인을 걸지 않는다** — 테이블이 없으면 `countRecentLoginFailures`는 0, `recordAdminAccess`는 조용히 넘어간다. 실제로 테이블을 지우고 로그인이 정상 동작함을 확인했다(프로덕션은 스키마 재적용 전까지 이 상태다)
+- **접수 삭제**(`deleteConsultationAction`): 상세 화면 맨 아래. `?confirm=delete` 쿼리로 확인 단계를 한 번 거치므로 JS 없이 동작하고, 실수로 눌러도 바로 지워지지 않는다. 메모는 `on delete cascade`로 함께 삭제(실측 확인). 기본은 여전히 "삭제 대신 스팸/실패 상태"이며 안내 문구로 그렇게 유도한다
+- **admin UI 정리**: 폼 컨트롤 공통 클래스(`field-styles.ts` — 라벨·인풋·힌트, 포커스 링 `ring-4`), **`SelectField`로 select 화살표 교체**(기본 화살표가 오른쪽에 바짝 붙던 문제 — `appearance-none` + `ChevronDown` 아이콘을 오른쪽 14px에 배치. **data URI 배경으로 하면 Tailwind arbitrary 값 안의 공백 때문에 클래스가 통째로 무시된다 — 실제로 그래서 화살표가 사라졌다**), 목록에 신규 건수 강조·행 끝 chevron 어포던스·빈 상태 문구를 필터별로, 상세는 정보표/상태폼/경과/삭제를 카드로 분리
+- **로그인을 이메일 + 비밀번호로**(Jace 요청 2026-08-24): 비밀번호 하나가 전부이면 짧게 쓰기 부담스럽고 `/admin/login`을 훑는 봇이 비밀번호만 대입하면 된다. **비밀번호 관리자 자동입력이 제대로 동작하는 것도 이유**(username 필드가 있어야 한 쌍으로 저장·채움이 맞는다 — 이메일 칸에 `autoComplete="username"`). 이메일은 **대소문자·앞뒤 공백 무시**, 두 값 모두 HMAC 상수 시간 비교하고 **AND로 합쳐서** 어느 쪽이 틀렸는지 흘리지 않는다(메시지도 "이메일 또는 비밀번호"). 접속기록에 시도한 계정을 남긴다(`admin_access_log.email` — 안전성 확보조치 기준이 요구하는 '계정' 항목). 로그인 화면은 **빠진 환경변수 이름을 그대로 나열**해 배포 환경에서 원인을 바로 알 수 있다
+- **`ADMIN_EMAIL`은 쉼표로 여러 계정**(Jace 2026-08-24, 두 명 예정): `ADMIN_EMAIL=a@x.com,b@y.com`. 빈 항목·공백·중복은 걸러내고 각각 정규화한다. **비밀번호는 공유**하고 누가 들어왔는지는 접속기록의 이메일로 구분한다 — 사람마다 다른 비밀번호가 필요해지면 계정별 쌍을 받는 구조로 바꿔야 한다. 허용 목록 비교는 일치해도 `break`하지 않는다(몇 번째에서 맞았는지 시간으로 흘리지 않게)
+- **⚠ 계정·비밀번호를 바꿔도 이미 발급된 세션은 그대로 살아 있다** — 쿠키는 "만료 전에 인증했다"만 증명하고 어떤 계정인지는 담지 않기 때문이다(최대 7일). 사람을 즉시 차단해야 하면 **`ADMIN_SESSION_SECRET`을 함께 갈아야** 모든 세션이 끊긴다. 검증 중에 실제로 확인했다(더미 계정으로 로그인한 세션이 자격증명 교체 후에도 유지됐다)
+  **⚠ `ADMIN_EMAIL`을 Vercel에 넣지 않으면 배포 직후 로그인 화면이 "환경변수가 설정되지 않았습니다 / ADMIN_EMAIL"로 뜨고 아무도 못 들어간다.** 커밋·푸시 전에 Vercel에 먼저 넣어 둘 것
+- 검증 2: rate limit은 실제 Postgres에서 카운트 의미론 4가지(연속 실패, 성공 후 리셋, 창 밖 제외, 해제 시각)를 SQL로 확인하고, 브라우저에서 5회 실패 → 차단 메시지까지 확인. 상태 변경·메모 저장·삭제(cascade 포함)도 화면에서 실행해 확인. 1440/390 스크린샷.
+  이메일 로그인은 `.env.development.local`(gitignore됨, `.env.local`보다 우선)에 더미 자격증명을 넣어 검증했다 — **Jace의 실제 비밀번호는 입력하지 않았다.** 이메일만 맞음/비밀번호만 맞음/둘 다 틀림 3가지 모두 거부, 대소문자·공백 다른 이메일로 로그인 성공, **계정 2개를 넣고 둘 다 로그인 성공 + 목록에 없는 세 번째 이메일은 거부**, 접속기록에 계정별로 구분되어 남는 것까지 확인 후 파일 삭제
+
 ### 상담 백엔드 구조 (2026-08-24 구현)
 
-- **스키마**: `db/schema.sql` — `consultations` 테이블 하나. Neon 콘솔 SQL Editor에 붙여넣어 실행(멱등). 실제 Postgres 17 컨테이너에서 전 쿼리 검증 완료
+- **스키마**: `db/schema.sql` — `consultations` + `consultation_notes` + `admin_access_log`(관리자 로그인 기록). Neon 콘솔 SQL Editor에 붙여넣어 실행(멱등). 실제 Postgres 17 컨테이너에서 전 쿼리 검증 완료
 - **DB 접근**: `src/lib/db.ts`(`@neondatabase/serverless` HTTP 드라이버 — 서버리스에 풀 없음, 태그드 템플릿만 허용) + `src/lib/consultations-repo.ts`. ORM 없이 순수 SQL
 - **처리 순서가 중요**: `deliver-consultation.ts`는 **저장 성공 = 사용자에게 성공 응답**. 메일 실패로 신청을 되돌리지 않는다(리드 유실 방지). 실패한 메일은 `notify_error`에 남고 관리자 목록에 ⚠로 뜬다
 - **IP는 원본을 저장하지 않는다** — `IP_HASH_SECRET`으로 HMAC한 `ip_hash`만. 남용 차단(10분 5건)에 필요한 최소한
 - **rate limit은 DB 기준**. 기존 인메모리 Map은 서버리스에서 인스턴스마다 따로라 무력했다 — 고쳤다
-- **관리자** `/admin`: 단일 비밀번호 + HMAC 서명 httpOnly 쿠키(`src/lib/admin-auth.ts`). 목록(상태 탭·페이지네이션) / 상세(연락처 tel: 링크). robots.txt·메타 양쪽에서 noindex
+- **관리자** `/admin`: **이메일 + 비밀번호**(2026-08-24부터) + HMAC 서명 httpOnly 쿠키(`src/lib/admin-auth.ts`). 목록(상태 탭·페이지네이션) / 상세(연락처 tel: 링크). robots.txt·메타 양쪽에서 noindex
 - **진행 상태 5단계**: `new`(신규) `in_progress`(진행중) `won`(성공) `lost`(실패) `spam`(스팸). 허용 값은 DB check 제약이 관리하므로 값을 바꾸려면 `db/schema.sql`·`consultations-repo.ts`·`status-badge.tsx` 세 곳을 같이 고칠 것
 - **메모는 덮어쓰기가 아니라 로그**(`consultation_notes` 테이블). 적을 때마다 시각과 함께 쌓인다. 상세 화면의 저장 버튼 하나가 상태 변경 + 메모 추가를 같이 처리한다(통화 직후 한 동작으로 끝나도록). 메모를 비우면 상태만 바뀐다
 - **`db/schema.sql`은 자가 마이그레이션**이다 — 예전 버전을 이미 실행한 프로젝트에 다시 붙여넣으면 상태값(contacted→in_progress, done→won)을 옮기고 예전 `memo` 컬럼 내용을 메모 로그로 이관한 뒤 컬럼을 지운다. 멱등하므로 언제든 다시 실행해도 된다
 - **⚠ 인증 페이지는 반드시 동적이어야 한다**: `isAdminAuthenticated()`가 `cookies()`를 **무조건 먼저** 읽는다. 환경변수 유무로 먼저 분기했더니 빌드 때 `cookies()`에 안 닿아 로그인 화면이 "환경변수 없음" 상태로 정적 프리렌더됐다. Next 16은 Cache Components 사용 시 `export const dynamic`이 제거되므로 여기 의존하지 말 것
-- **환경변수 8개**: `.env.example` 참조 (`DATABASE_URL` `RESEND_API_KEY` `CONSULTATION_NOTIFY_TO` `CONSULTATION_NOTIFY_FROM` `CONSULTATION_REPLY_TO` `ADMIN_PASSWORD` `ADMIN_SESSION_SECRET` `IP_HASH_SECRET`)
+- **환경변수 9개**: `.env.example` 참조 (`DATABASE_URL` `RESEND_API_KEY` `CONSULTATION_NOTIFY_TO` `CONSULTATION_NOTIFY_FROM` `CONSULTATION_REPLY_TO` **`ADMIN_EMAIL`** `ADMIN_PASSWORD` `ADMIN_SESSION_SECRET` `IP_HASH_SECRET`). 이 중 FROM은 도메인 인증 후에, **REPLY_TO는 현재 미사용**(위 "배포 상태" — Vercel에서 제거함), **`ADMIN_EMAIL`은 2026-08-24 신설이라 Vercel에 아직 없다**
 
 ### 배포 차단 요인 — 클라이언트에게 받을 것 하나 (2026-08-24 조사)
 
@@ -73,29 +106,9 @@ www.ezcredible.com(한국 B2B 기업금융 컨설팅: 정책자금 · 유동성�
 
 계정은 이미 다 만들었다 — Neon(싱가포르, 스키마 적용됨) · Resend(Jace 계정) · Vercel(Jace 새 계정). 로컬 `.env.local`에 값이 다 들어 있고 실제로 저장·발송까지 확인했다.
 
-1. **도메인 없이 Vercel에 먼저 배포한다** (DNS를 기다릴 필요 없는 유일한 큰 작업).
-   `*.vercel.app` 주소로 올려서 프로덕션에서 실제로 도는지 확인하는 게 목적이다. 도메인은 나중에 붙이면 된다.
-
-   **⚠ `.env.local`은 배포되지 않는다.** `.gitignore`에 걸려 있어 git에도 없고 Vercel도 못 본다.
-   Vercel 프로젝트 설정 > Environment Variables에 **직접** 넣어야 한다. 안 넣으면 빌드는 성공하고
-   런타임에만 조용히 실패한다(폼은 "준비 중", `/admin`은 "DATABASE_URL 없음").
-
-   넣을 값 6개 — `.env.local`의 값 그대로:
-   `DATABASE_URL` `RESEND_API_KEY` `CONSULTATION_NOTIFY_TO` `ADMIN_PASSWORD` `ADMIN_SESSION_SECRET` `IP_HASH_SECRET`
-   `CONSULTATION_NOTIFY_FROM`·`CONSULTATION_REPLY_TO`는 **키를 만들지 말 것**(도메인 인증 후 FROM만 추가).
-   빈 값으로 키만 만들어도 이제는 안전하다 — `deliver-consultation.ts`의 `env()`가 빈 문자열을 미설정으로 본다.
-
-   **`ENABLE_EXPERIMENTAL_COREPACK=1`도 같이 넣는다 — 이건 Production만이 아니라 3개 환경 전부에.**
-   Vercel이 지원하는 pnpm은 6~10이라 그냥 두면 락파일(`lockfileVersion: 9.0`)을 보고 pnpm 10으로 설치한다.
-   corepack을 켜면 `package.json`의 `packageManager: pnpm@11.22.0`을 그대로 쓴다. 빌드 도구 설정이라
-   DB 자격증명과 성격이 다르니 환경을 가릴 이유가 없다. Vercel이 experimental이라 부르는 건 Node의 corepack 자체가 실험 단계라서다.
-
-   **환경변수는 Production만 체크한다.** 셋 다 체크하면 브랜치 푸시마다 생기는 프리뷰 배포가
-   운영 DB에 직접 쓴다(프리뷰에서 폼 테스트하면 진짜 상담 목록에 섞인다).
-   Production만 두면 프리뷰에서는 폼이 "준비 중"으로 뜨고 운영 데이터를 안 건드린다.
-
-   Hobby 한도는 여유가 크다(함수 300초·2GB, 외부 네트워크 제한 없음, 리전 1개 — `vercel.json`에 `sin1` 고정).
-   배포 후 **실제 폼으로 1건 제출**해서 저장 + 메일 수신 + `/admin` 노출까지 확인하고, 그 행은 지운다.
+1. ~~도메인 없이 Vercel에 먼저 배포~~ — **완료(2026-08-24). 상세는 위 "배포 상태" 절.**
+   다음 git push가 곧 재배포다 — 2차 작업(admin 대시보드 등) 커밋·푸시 후 프로덕션 `/admin`에
+   새 사이드바 셸이 뜨는지, 폼이 여전히 접수되는지만 확인하면 된다.
 2. **도메인 연결은 카페24 접근 권한을 받은 뒤**(위 "배포 차단 요인" 절). 그때 할 것:
    `privacyMeta.revised`를 배포일로 → 실제 도메인에서 `sitemap.xml`·`robots.txt`·OG 태그 확인 →
    네이버 서치어드바이저·구글 서치콘솔에 sitemap 제출 → 기존 유입 URL 17개 200 확인(리다이렉트는 `/rental/*` 하나뿐)
@@ -124,9 +137,9 @@ www.ezcredible.com(한국 B2B 기업금융 컨설팅: 정책자금 · 유동성�
 측정은 전부 빌드 산출물 기준(`.next/diagnostics/route-bundle-stats.json`, gzip 실측, 프로덕션 서버 + 브라우저 network 패널). 로컬 개발 서버 체감이 아니다.
 
 - **`SUIT-Bold.woff2` 167KB가 매 페이지 preload되는데 한 글자도 안 쓰이고 있었다.** `layout.tsx`가 700·800 두 벌을 등록하면 `next/font`가 둘 다 `<link rel="preload">` 하는데, SUIT을 적용하는 규칙은 `globals.css`의 `h1~h4`(weight 800) 하나뿐이고 `.font-display`가 붙은 36곳도 전부 `font-extrabold`였다. 700을 요구하는 곳이 코드 전체에 없다. 800만 남기고 파일을 지웠다 — **홈 폰트 전송량 419KB → 252KB**(브라우저에서 실측). 700을 쓰는 곳이 생기면 파일을 되살리고 `src`에 다시 추가할 것
-- **관리자 로그인 실패 시 400ms 지연(`setTimeout`)을 지웠다.** 서버리스는 요청마다 인스턴스가 따로 뜨므로 병렬 시도에는 아무 제약이 안 되고(순차 공격자만 느려진다), 실패마다 함수를 400ms 붙잡아 두는 쪽이 오히려 Hobby 함수 예산을 태우는 레버가 된다. 주석에 있던 "공유 저장소 없이 할 수 있는 최선"이라는 근거도 낡았다 — 지금은 Neon이 있고 상담 폼은 이미 DB 기준으로 제한한다. `ADMIN_PASSWORD`가 24자라 애초에 대입이 불가능하다. **진짜로 막아야 하면 `countRecentByIpHash` 패턴을 로그인에도 붙일 것**(HMAC 상수 시간 비교는 그대로 두었다 — 그건 제대로 된 코드다)
+- **관리자 로그인 실패 시 400ms 지연(`setTimeout`)을 지웠다.** 서버리스는 요청마다 인스턴스가 따로 뜨므로 병렬 시도에는 아무 제약이 안 되고(순차 공격자만 느려진다), 실패마다 함수를 400ms 붙잡아 두는 쪽이 오히려 Hobby 함수 예산을 태우는 레버가 된다. 주석에 있던 "공유 저장소 없이 할 수 있는 최선"이라는 근거도 낡았다 — 지금은 Neon이 있고 상담 폼은 이미 DB 기준으로 제한한다. ~~`ADMIN_PASSWORD`가 24자라 대입이 불가능하다~~ → **낡은 서술.** 실제 값은 9자이고 Jace는 앞으로도 실용적인 길이를 쓸 것이다. **그래서 2026-08-24에 로그인에도 DB 기준 실패 카운트를 붙였다**(아래 2차 작업 절). HMAC 상수 시간 비교는 그대로 두었다 — 그건 제대로 된 코드다
 - 손댈 게 없다고 판단한 것: first-load JS가 24개 라우트 전부 **152~157KB gzip**으로 평평하다(react-dom 69.9 + Next 라우터 34.8 ≈ 105KB가 프레임워크 바닥값, 라우트별 편차 1~5KB). 클라이언트 컴포넌트가 9개뿐이라 나온 결과다. CSS 27.3KB gzip 한 장, 홈 HTML 20.8KB gzip, 이미지 최대 330KB. DB 인덱스 4개가 실제 쿼리 3종을 정확히 덮고 `count(*) over()`로 왕복을 줄여 뒀다. **20/24 라우트가 정적이라 CDN 엣지에서 나가고 `sin1`도 Neon도 안 거친다** — 리전 선택은 상담 접수와 `/admin`에만 영향
-- 구조 문제로 남겨둔 것: `/admin`이 사이트 헤더·푸터(와 폰트 preload)를 물고 있다. 라우트 그룹 개편이 필요한데 사내 3페이지라 실익이 작다
+- ~~구조 문제로 남겨둔 것: `/admin`이 사이트 헤더·푸터를 물고 있다~~ → **2026-08-24 라우트 그룹으로 해결**(위 "2026-08-24 2차 작업" 절 — `(site)` 셸 / `admin/(dashboard)` 대시보드 셸 분리)
 
 ### SEO · 메타 (2026-08-23 작성, 2026-08-24 보강)
 
@@ -150,7 +163,7 @@ www.ezcredible.com(한국 B2B 기업금융 컨설팅: 정책자금 · 유동성�
 
 ### 고객지원 2페이지 (2026-08-23)
 
-- 개인정보처리방침(`src/content/pages/privacy.ts`, 13조): 기존 2023-08-31 본문을 개인정보 보호법 제30조 체계로 손봤다 — 정보통신망법 삭제, 수집 항목에 직책·희망 솔루션·(선택) 문의 내용, 보유기간 3년으로 통일, 제3자 제공·처리 위탁 조항 분리, 접속기록 1년, 구제기관 갱신, 면책 문구 삭제. **보호책임자 = 대표 이주환**, 연락처는 `site.ts` `privacyOfficer`(전화 채워짐, 이메일은 빈 값 — 비어 있으면 표시 안 함 + DevLabel). 제6조 위탁 현황은 배포(호스팅·전송 서비스) 시 채울 것. 개정일 `privacyMeta.revised`는 배포일로
+- 개인정보처리방침(`src/content/pages/privacy.ts`, 13조): 기존 2023-08-31 본문을 개인정보 보호법 제30조 체계로 손봤다 — 정보통신망법 삭제, 수집 항목에 직책·희망 솔루션·(선택) 문의 내용, 보유기간 3년으로 통일, 제3자 제공·처리 위탁 조항 분리, 접속기록 1년, 구제기관 갱신, 면책 문구 삭제. **보호책임자 = 대표 이주환**, 연락처는 `site.ts` `privacyOfficer`(전화 채워짐, 이메일은 빈 값 — 비어 있으면 표시 안 함 + DevLabel). **제6조(위탁·국외이전)는 2026-08-24 작성 완료** — Vercel Inc.(호스팅) · Neon, LLC(DB, 싱가포르) · Plus Five Five, Inc./Resend(알림 메일), 국외이전 표와 거부권 안내 포함. 인프라를 바꾸면 이 표도 같이 고칠 것. 개정일 `privacyMeta.revised`는 도메인 오픈일로
 - 상담신청: 기존 필드(희망 솔루션·이름·직책·연락처·회사명·사업자등록번호·동의) + 선택 문의 내용. 검증은 `src/lib/consultation.ts`(클라이언트·서버 공용 — 전화 형식, 사업자번호 체크섬), 동의 박스에 수집 항목·목적·보유기간 요약(`consentSummary`, 방침과 같은 값). API는 허니팟 + IP당 10분 5건 제한. `?topic=policy-funds|liquidity-funds|growth|certification`로 희망 솔루션 미리 선택 — `SubHero`의 빠른 상담신청이 그룹에 맞게 붙인다
 
 

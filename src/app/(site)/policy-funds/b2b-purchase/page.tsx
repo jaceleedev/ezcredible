@@ -45,7 +45,7 @@ export default function B2BPurchasePage() {
             src="/images/solutions/policy-funds.png"
             alt="B2B 구매자금 보증을 상징하는 정책자금 서류"
             aspect="photo"
-            sizes="(min-width: 1024px) 480px, 100vw"
+            sizes="(min-width: 560px) 480px, 100vw"
             className="rounded-[28px] shadow-card"
           />
         }

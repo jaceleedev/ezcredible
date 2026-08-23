@@ -29,10 +29,10 @@ export const credit: FundPage = {
   summary:
     "이지크레더블은 NICE평가정보·한국평가데이터의 기업신용평가와 이크레더블의 기술신용평가(TCB)를 영업대행하며, 평가를 받기 전에 기업의 재무·비재무 요소를 먼저 점검합니다. 등급이 나온 뒤에 고치는 것보다 평가 전에 부족한 부분을 바로잡는 쪽이 훨씬 빠르고 비용도 적게 듭니다.",
   facts: [
-    { label: "신용등급 체계", value: "AAA~D", unit: "10단계" },
-    { label: "기술등급 체계(TCB)", value: "T1~T10", unit: "10단계" },
-    { label: "평가기관", value: 3, unit: "곳 · NICE · KoDATA · 이크레더블" },
-    { label: "활용처", value: "입찰·자금·거래", unit: "" },
+    { label: "신용등급 체계", value: "AAA~D", sub: "10단계" },
+    { label: "기술등급 체계(TCB)", value: "T1~T10", sub: "10단계" },
+    { label: "평가기관", value: 3, unit: "곳", sub: "NICE · KoDATA · 이크레더블" },
+    { label: "활용처", value: "입찰·자금·거래" },
   ],
   features: [
     {
@@ -162,10 +162,10 @@ export const pg: FundPage = {
   summary:
     "이지크레더블은 KIS정보통신의 영업위탁사로 KISPG 서비스를 제공합니다. 쇼핑몰·예약·구독처럼 온라인 결제가 필요한 사업자가 신용카드, 계좌이체, 가상계좌, 휴대전화 소액결제를 한 번에 붙이고, 정산 내역은 가맹점관리시스템(MMS)에서 바로 확인할 수 있습니다.",
   facts: [
-    { label: "결제수단", value: 4, unit: "종 · 카드·이체·가상계좌·휴대전화" },
-    { label: "일정산", value: "D+7", unit: "일 · 은행영업일" },
-    { label: "정산 주기 선택", value: "월 1·2·4회", unit: "또는 일정산" },
-    { label: "가맹점 관리", value: "MMS", unit: "정산 데이터 조회" },
+    { label: "결제수단", value: 4, unit: "종", sub: "카드 · 이체 · 가상계좌 · 휴대전화" },
+    { label: "일정산", value: "D+7", unit: "일", sub: "은행영업일 기준" },
+    { label: "정산 주기 선택", value: "월 1·2·4회", sub: "또는 일정산" },
+    { label: "가맹점 관리", value: "MMS", sub: "정산 데이터 조회" },
   ],
   features: [
     {
@@ -236,10 +236,10 @@ export const van: FundPage = {
   summary:
     "이지크레더블은 KIS정보통신과 KSNET의 VAN 영업대리점입니다. 신규 매장의 단말기 설치부터 카드사 가맹 등록, 현금영수증·멤버십 같은 부가서비스, 매출·입금 정산 관리까지 매장 결제 전반을 한 번에 세팅합니다.",
   facts: [
-    { label: "승인 서비스", value: 365, unit: "일 · 24시간", plain: true },
-    { label: "취급 카드", value: "신용·직불·체크", unit: "전 카드사" },
-    { label: "파트너", value: "KIS · KSNET", unit: "" },
-    { label: "인프라", value: "IDC", unit: "무장애 · 무중단" },
+    { label: "승인 서비스", value: 365, unit: "일", sub: "24시간 승인", plain: true },
+    { label: "취급 카드", value: "신용·직불·체크", sub: "전 카드사" },
+    { label: "파트너", value: "KIS · KSNET" },
+    { label: "인프라", value: "IDC", sub: "무장애 · 무중단" },
   ],
   features: [
     {

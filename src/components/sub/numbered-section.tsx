@@ -44,7 +44,9 @@ export function NumberedSection({ index, title, lead, aside, id, className, chil
             {header}
             {children}
           </Reveal>
-          <Reveal variant="scale" delay={120}>
+          {/* 1열로 접히는 lg 미만에서는 aside(이미지 스테이지)가 컨테이너 전폭으로 커지지 않게
+              데스크탑 열과 같은 480px에서 잘라 가운데 둔다 — 800px짜리 원본이 업스케일되지 않는 한계이기도 하다 */}
+          <Reveal variant="scale" delay={120} className="w-full max-w-[30rem] justify-self-center lg:max-w-none lg:justify-self-stretch">
             {aside}
           </Reveal>
         </Container>

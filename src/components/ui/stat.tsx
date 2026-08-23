@@ -7,35 +7,45 @@ type StatProps = {
   /** 숫자면 카운트업 애니메이션 */
   value: number | string;
   unit?: ReactNode;
+  /** 값 아래 붙는 부가 설명 — "NICE · KoDATA · 이크레더블"처럼 단위가 아닌 꼬리 정보 */
+  sub?: ReactNode;
   /** 앞에 붙는 기호 (예: "+") */
   prefix?: string;
   /** 연도처럼 천 단위 콤마를 찍지 않는 숫자 */
   plain?: boolean;
   tone?: "light" | "dark";
-  /** 서브페이지 수치 칸용 — 모바일에서 숫자를 줄이고 단위가 다음 줄로 내려갈 수 있다 */
+  /** 서브페이지 수치 칸용 — 값 크기를 한 단계 줄이고 전 칸이 같은 크기를 쓴다 */
   compact?: boolean;
   className?: string;
 };
 
-export function Stat({ label, value, unit, prefix, plain = false, tone = "dark", compact = false, className }: StatProps) {
+/** SUIT은 한글이 라틴 대문자·숫자보다 시각적으로 크게 그려져, 같은 px면 한글 값만 도드라진다 */
+export const hasHangul = (value: number | string) => /[가-힣]/.test(String(value));
+
+export function Stat({ label, value, unit, sub, prefix, plain = false, tone = "dark", compact = false, className }: StatProps) {
   const dark = tone === "dark";
-  // "3조 3,620억"·"입찰·자금·거래"처럼 긴 문자열은 compact에서 작게 — 1200폭의 4열 칸(≈228px)에도 들어가야 한다
-  const long = typeof value === "string" && value.length > 6;
   return (
     <div className={cn("flex flex-col gap-3", className)}>
       <div className={cn("text-[13px] font-semibold", dark ? "text-cobalt-300" : "text-muted")}>{label}</div>
-      <div className={cn("flex items-baseline gap-x-1", compact ? "flex-wrap" : "whitespace-nowrap")}>
-        <span
-          className={cn(
-            "font-display font-extrabold whitespace-nowrap tabular-nums",
-            compact ? (long ? "text-[1.75rem] leading-none tracking-[-0.02em] sm:text-[2rem]" : "text-[1.75rem] leading-none tracking-[-0.02em] sm:text-stat") : "text-stat",
-            dark ? "text-white" : "text-ink",
-          )}
-        >
-          {prefix}
-          {typeof value === "number" ? <Counter value={value} plain={plain} /> : value}
-        </span>
-        {unit && <span className={cn("text-base font-bold", !compact && "whitespace-nowrap", dark ? "text-gold-400" : "text-brand-strong")}>{unit}</span>}
+      <div>
+        <div className={cn("flex items-baseline gap-x-1.5", compact ? "flex-wrap gap-y-1" : "whitespace-nowrap gap-x-1")}>
+          <span
+            className={cn(
+              "font-display font-extrabold whitespace-nowrap tabular-nums",
+              // compact는 칸마다 크기가 달라지지 않도록 한 단계로 고정한다.
+              // 한글 값만 8%쯤 줄여 라틴·숫자 값과 시각 크기를 맞춘다(광학 보정 — 다른 크기로 보이면 안 된다)
+              compact
+                ? cn("leading-none tracking-[-0.02em]", hasHangul(value) ? "text-[1.625rem] xl:text-[1.875rem]" : "text-[1.75rem] xl:text-[2rem]")
+                : "text-stat",
+              dark ? "text-white" : "text-ink",
+            )}
+          >
+            {prefix}
+            {typeof value === "number" ? <Counter value={value} plain={plain} /> : value}
+          </span>
+          {unit && <span className={cn("text-base font-bold whitespace-nowrap", dark ? "text-gold-400" : "text-brand-strong")}>{unit}</span>}
+        </div>
+        {sub && <p className={cn("mt-1.5 text-[13px] leading-snug font-medium", dark ? "text-white/60" : "text-muted")}>{sub}</p>}
       </div>
     </div>
   );

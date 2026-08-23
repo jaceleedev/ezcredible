@@ -57,6 +57,26 @@ begin
   end if;
 end $$;
 
+-- 관리자 로그인 접속기록. 두 가지 목적을 겸한다:
+--   1) 로그인 남용 차단 — 최근 실패 횟수로 시도를 제한한다(서버리스라 인메모리 카운트는 무력하다)
+--   2) 「개인정보의 안전성 확보조치 기준」이 요구하는 개인정보처리시스템 접속기록
+--      (개인정보처리방침 제9조가 "접속기록의 1년 이상 보관"을 고지하고 있다)
+-- IP는 상담과 같은 원칙으로 원본을 저장하지 않고 IP_HASH_SECRET으로 HMAC한 값만 남긴다.
+create table if not exists admin_access_log (
+  id          bigint      generated always as identity primary key,
+  success     boolean     not null,
+  email       text,                      -- 시도한 계정(접속기록의 '계정' 항목). 실패 건은 입력값 그대로
+  ip_hash     text,
+  user_agent  text,
+  created_at  timestamptz not null default now()
+);
+
+-- 예전 버전(이메일 칸이 없던 때)에 만든 테이블에도 칸을 더한다
+alter table admin_access_log add column if not exists email text;
+
+create index if not exists admin_access_log_ip_idx     on admin_access_log (ip_hash, created_at desc);
+create index if not exists admin_access_log_recent_idx on admin_access_log (created_at desc);
+
 create index if not exists consultations_created_at_idx     on consultations (created_at desc);
 create index if not exists consultations_status_idx         on consultations (status, created_at desc);
 create index if not exists consultations_ip_hash_idx        on consultations (ip_hash, created_at desc);
