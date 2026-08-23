@@ -1,19 +1,13 @@
 import { normalizeConsultation, validateConsultation, type ConsultationInput } from "@/lib/consultation";
+import { countRecentByIpHash, hashIp } from "@/lib/consultations-repo";
 import { deliverConsultation } from "@/lib/deliver-consultation";
 
-/** IP당 10분에 5건 — 서버 인스턴스 메모리 기준의 가벼운 제한 */
-const WINDOW_MS = 10 * 60 * 1000;
+/**
+ * 같은 IP에서 10분에 5건. 서버리스는 인스턴스마다 메모리가 따로라 인메모리 카운트가
+ * 사실상 무력하므로 저장된 신청 건수(ip_hash 기준)로 센다.
+ */
+const WINDOW_SECONDS = 10 * 60;
 const MAX_PER_WINDOW = 5;
-const hits = new Map<string, number[]>();
-
-function tooMany(ip: string) {
-  const now = Date.now();
-  const recent = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
-  recent.push(now);
-  hits.set(ip, recent);
-  if (hits.size > 5000) hits.clear();
-  return recent.length > MAX_PER_WINDOW;
-}
 
 function str(value: unknown, max = 2000) {
   return typeof value === "string" ? value.slice(0, max) : "";
@@ -30,11 +24,6 @@ export async function POST(request: Request) {
   // 허니팟 — 채워져 있으면 봇으로 보고 조용히 성공 응답
   if (str(body.website)) return Response.json({ ok: true });
 
-  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
-  if (tooMany(ip)) {
-    return Response.json({ ok: false, message: "요청이 너무 많습니다. 잠시 후 다시 시도해 주세요." }, { status: 429 });
-  }
-
   const input: ConsultationInput = {
     topic: str(body.topic, 40),
     name: str(body.name, 100),
@@ -46,13 +35,31 @@ export async function POST(request: Request) {
     consent: body.consent === true,
   };
 
+  // 검증을 먼저 — 형식이 틀린 요청에 DB를 왕복하지 않는다
   const errors = validateConsultation(input);
   if (Object.keys(errors).length > 0) {
     return Response.json({ ok: false, message: "입력 내용을 확인해 주세요.", errors }, { status: 422 });
   }
 
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
+  const ipHash = await hashIp(ip);
+
+  if (ipHash) {
+    try {
+      if ((await countRecentByIpHash(ipHash, WINDOW_SECONDS)) >= MAX_PER_WINDOW) {
+        return Response.json({ ok: false, message: "요청이 너무 많습니다. 잠시 후 다시 시도해 주세요." }, { status: 429 });
+      }
+    } catch (error) {
+      // 카운트 실패로 정상 신청을 막지 않는다
+      console.error("[consultation] 남용 확인 실패:", error);
+    }
+  }
+
   const payload = { ...normalizeConsultation(input), submittedAt: new Date().toISOString() };
-  const result = await deliverConsultation(payload);
+  const result = await deliverConsultation(payload, {
+    ipHash,
+    userAgent: str(request.headers.get("user-agent") ?? "", 500),
+  });
 
   if (!result.ok) {
     const message =

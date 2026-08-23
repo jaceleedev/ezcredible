@@ -30,7 +30,7 @@ export function IntroCard() {
               금융업계에서 오랜 경력을 가진 전문가가 상담 신청부터 자금 확보, 그 이후의 관리까지 함께합니다.
             </p>
             <Button href="/about/company" variant="link" className="relative text-white hover:text-cobalt-200">
-              자세히 보기
+              <span className="sr-only">회사소개 </span>자세히 보기
             </Button>
           </div>
           <div className="border-t border-white/10 bg-white/4 lg:border-l lg:border-t-0">

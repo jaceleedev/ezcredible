@@ -79,7 +79,7 @@ export default function CompanyPage() {
                     ))}
                   </div>
                   <Button variant="link" href={solution.href} className="mt-auto pt-2 text-sm">
-                    자세히 보기
+                    <span className="sr-only">{`${solution.title} `}</span>자세히 보기
                   </Button>
                 </div>
               </Card>

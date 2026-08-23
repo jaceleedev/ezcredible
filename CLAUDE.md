@@ -14,20 +14,85 @@ www.ezcredible.com(한국 B2B 기업금융 컨설팅: 정책자금 · 유동성�
 - 보고 전 검사: `pnpm exec tsc --noEmit` → `pnpm lint` → `pnpm build`, 그리고 브라우저에서 **1200 / 1440 / 1920 / 390** 폭 확인
   (1200에서만 보고 넘겼다가 넓은 화면에서 히어로가 어긋난 적이 있다)
 
-## 현재 상태 (2026-08-24 기준) — 사이트 골격·콘텐츠·이미지 전부 완료, 배포 전 단계
+## 현재 상태 (2026-08-24 기준) — 코드 전부 완료, 계정 생성 + 배포만 남음
 
-완료: 디자인 시스템(`/design-system`, noindex) · 홈 · **서브페이지 17/17** · 상담 신청 폼 + `/api/consultations` · 404 · sitemap · robots · OG 이미지 · 렌탈 리다이렉트 · **코덱스 3D 이미지 21장 교체 완료**(`675037b`, 2026-08-24 검수: 규격·용량 정상, temp 폴더·DevLabel·SVG 화살표 제거됨, tsc/lint/build 통과, 1440/1920/390 확인)
-마지막 커밋 `675037b`(코덱스 이미지 + 가이드), `origin/main`과 동기화. 작업 트리 깨끗함.
+완료: 디자인 시스템(`/design-system`, noindex) · 홈 · **서브페이지 17/17** · 404 · sitemap · robots · OG 이미지 · 렌탈 리다이렉트 · **코덱스 3D 이미지 21장**(`675037b`) · **상담 저장·알림·관리자 페이지**(아래)
+마지막 커밋 `1d22060`. 상담 백엔드 작업은 아직 커밋 전.
+
+### 인프라 확정 (2026-08-24, Jace 결정) — 전부 무료 구간
+
+| 역할 | 서비스 | 비용 | 비고 |
+|---|---|---|---|
+| 호스팅 | **Vercel Hobby** | $0 | Jace 결정. ToS상 상업적 사용은 Pro($20/월) 대상이며, 문제 시 **코드 변경 없이 결제만 Pro로 올리면 됨**(마이그레이션 아님). 함수 리전은 `vercel.json`에서 **`sin1`(싱가포르)** 로 고정 — 기본값 `iad1`(미국)이면 DB 왕복마다 태평양을 건넌다. Neon과 같은 리전에 두라는 게 Vercel 지침 |
+| DB | **Neon Free** | $0 | 무료도 100 CU-hours 소진 시 그 달 컴퓨트 정지 → 실서비스 뒤 **Launch(최저요금 없는 사용량제, 월 $1~3)** 로 올릴 것 |
+| 알림 메일 | **Resend Free** | $0 | 3,000통/월·일 100통·데이터 보관 30일 |
+
+검토 후 기각: Cloudflare Workers(월 $5, 상업적 사용 OK·서울 엣지지만 새 스택 학습 부담) · Netlify Free(크레딧 300 소진 시 사이트 정지) · Supabase(무료는 7일 비활동 시 일시정지, Pro $25).
+카카오 알림톡은 건당 8~13원 + 비즈채널 심사 + 대행사 계약이라 제외.
+
+### 상담 백엔드 구조 (2026-08-24 구현)
+
+- **스키마**: `db/schema.sql` — `consultations` 테이블 하나. Neon 콘솔 SQL Editor에 붙여넣어 실행(멱등). 실제 Postgres 17 컨테이너에서 전 쿼리 검증 완료
+- **DB 접근**: `src/lib/db.ts`(`@neondatabase/serverless` HTTP 드라이버 — 서버리스에 풀 없음, 태그드 템플릿만 허용) + `src/lib/consultations-repo.ts`. ORM 없이 순수 SQL
+- **처리 순서가 중요**: `deliver-consultation.ts`는 **저장 성공 = 사용자에게 성공 응답**. 메일 실패로 신청을 되돌리지 않는다(리드 유실 방지). 실패한 메일은 `notify_error`에 남고 관리자 목록에 ⚠로 뜬다
+- **IP는 원본을 저장하지 않는다** — `IP_HASH_SECRET`으로 HMAC한 `ip_hash`만. 남용 차단(10분 5건)에 필요한 최소한
+- **rate limit은 DB 기준**. 기존 인메모리 Map은 서버리스에서 인스턴스마다 따로라 무력했다 — 고쳤다
+- **관리자** `/admin`: 단일 비밀번호 + HMAC 서명 httpOnly 쿠키(`src/lib/admin-auth.ts`). 목록(상태 탭·페이지네이션) / 상세(연락처 tel: 링크). robots.txt·메타 양쪽에서 noindex
+- **진행 상태 5단계**: `new`(신규) `in_progress`(진행중) `won`(성공) `lost`(실패) `spam`(스팸). 허용 값은 DB check 제약이 관리하므로 값을 바꾸려면 `db/schema.sql`·`consultations-repo.ts`·`status-badge.tsx` 세 곳을 같이 고칠 것
+- **메모는 덮어쓰기가 아니라 로그**(`consultation_notes` 테이블). 적을 때마다 시각과 함께 쌓인다. 상세 화면의 저장 버튼 하나가 상태 변경 + 메모 추가를 같이 처리한다(통화 직후 한 동작으로 끝나도록). 메모를 비우면 상태만 바뀐다
+- **`db/schema.sql`은 자가 마이그레이션**이다 — 예전 버전을 이미 실행한 프로젝트에 다시 붙여넣으면 상태값(contacted→in_progress, done→won)을 옮기고 예전 `memo` 컬럼 내용을 메모 로그로 이관한 뒤 컬럼을 지운다. 멱등하므로 언제든 다시 실행해도 된다
+- **⚠ 인증 페이지는 반드시 동적이어야 한다**: `isAdminAuthenticated()`가 `cookies()`를 **무조건 먼저** 읽는다. 환경변수 유무로 먼저 분기했더니 빌드 때 `cookies()`에 안 닿아 로그인 화면이 "환경변수 없음" 상태로 정적 프리렌더됐다. Next 16은 Cache Components 사용 시 `export const dynamic`이 제거되므로 여기 의존하지 말 것
+- **환경변수 8개**: `.env.example` 참조 (`DATABASE_URL` `RESEND_API_KEY` `CONSULTATION_NOTIFY_TO` `CONSULTATION_NOTIFY_FROM` `CONSULTATION_REPLY_TO` `ADMIN_PASSWORD` `ADMIN_SESSION_SECRET` `IP_HASH_SECRET`)
+
+### 배포 차단 요인 — 클라이언트에게 받을 것 하나 (2026-08-24 조사)
+
+**막힌 것: 카페24 DNS 접근 권한.** Jace는 이 회사를 오래 전에 퇴사해서 계정을 모른다. 이거 하나만 받으면 나머지는 전부 풀린다.
+
+현재 도메인 실측값:
+
+| 항목 | 값 | 의미 |
+|---|---|---|
+| 네임서버 | `ns1/ns2.cafe24.com`, `.co.kr` | DNS는 **카페24**에서 관리 (Vercel 아님) |
+| `www` | `cname.vercel-dns.com` | 이미 Vercel 연결 |
+| 루트 A | `76.76.21.21` 등 | Vercel |
+| 루트 MX | `kr1-aspmx1/2.worksmobile.com` | 네이버웍스 흔적이나 **회사는 더 이상 안 씀**(Jace 확인). 정리 대상이지만 급하지 않음 |
+| 루트 SPF | 없음 | — |
+
+**옛 회사 Vercel 계정은 받을 필요 없다.** 현재 ezcredible.com은 전 직장 Vercel 계정에서 돌고 있고 Jace는 본인 이메일로 새 계정을 팠는데, [Vercel 문서](https://vercel.com/docs/domains/working-with-domains/add-a-domain)상 *"If the domain is in use by another Vercel account, you will need to verify access to the domain, with a TXT record… this will not move the domain into your account, but will allow you to use it in your project."* 즉 **DNS에 TXT 하나만 넣으면 새 프로젝트에서 쓸 수 있다.** 카페24 접근만 있으면 된다.
+
+카페24 접근이 생기면 넣을 레코드(전부 **추가만** 하는 것이라 사이트·기존 메일에 영향 없음):
+
+1. Vercel 도메인 확인용 TXT (Vercel 대시보드가 값을 알려준다)
+2. A·CNAME을 새 프로젝트 값으로 (Vercel이 제시하는 값)
+3. Resend 3개 — `send` MX, `send` TXT(SPF), `resend._domainkey` TXT.
+   **MX가 `send` 서브도메인에 붙으므로 루트 MX를 건드리지 않는다** → 회사 메일을 깨뜨릴 위험 없음. 루트 도메인을 인증해도 `noreply@ezcredible.com`으로 발송 가능
+
+**그 전까지 `CONSULTATION_NOTIFY_TO`는 Jace 주소 하나만 유지할 것.** Resend는 도메인 인증 전까지 가입 계정 주소로만 보내고, 수신자 목록에 허용되지 않은 주소가 하나라도 섞이면 **요청 전체가 403으로 거부**된다(대표님 주소를 넣으면 Jace한테도 안 온다). 저장은 되고 알림만 실패하며 `notify_error`에 남아 관리자 목록에 ⚠로 뜬다.
 
 ### 다음 세션 가이드 — 순서대로
 
-1. **배포 준비(호스팅 결정 후)**. 결정되면 같은 세션에서:
-   - `src/content/pages/privacy.ts` 제6조 `note` 블록을 실제 수탁자(호스팅 사업자, 상담 전송 서비스)와 위탁 업무로 교체하고 `privacyMeta.revised`를 배포일로
-   - `.env`에 `CONSULTATION_WEBHOOK_URL`(있다면) 설정, 도메인 연결, `https://www.ezcredible.com/sitemap.xml`·`robots.txt`·OG 태그를 실제 도메인에서 확인, 검색엔진(네이버 서치어드바이저·구글 서치콘솔)에 sitemap 제출
-   - 기존 사이트 URL이 전부 동일하므로 리다이렉트는 `/rental/*` 하나뿐. 배포 직후 기존 유입 URL 17개가 200인지 확인
-2. **상담 전송 방식 확정 — 맨 마지막**(Jace 결정: 이메일/시트/슬랙). `src/lib/deliver-consultation.ts` 한 곳만 바꾼다. 지금은 `CONSULTATION_WEBHOOK_URL`이 있으면 JSON POST, 없으면 dev는 서버 콘솔 로그 + 성공, prod는 503 "준비 중"
+1. **계정 3개 만들고 연결** (Jace가 해야 하는 일 — 코드는 준비됨):
+   - Neon 프로젝트 생성(**리전 싱가포르 `aws-ap-southeast-1`** — 방침 국외이전 표에 싱가포르로 적혀 있음. 다른 리전을 고르면 `privacy.ts` 표도 고칠 것) → SQL Editor에 `db/schema.sql` 붙여넣기 → Pooled connection string을 `DATABASE_URL`로
+   - Resend 가입 → `ezcredible.com` 도메인 인증(DNS에 DKIM/SPF 레코드) → API 키를 `RESEND_API_KEY`, 대표님 메일을 `CONSULTATION_NOTIFY_TO`, `CONSULTATION_NOTIFY_FROM`은 `"이지크레더블 상담신청 <noreply@ezcredible.com>"`. 도메인 인증 전에는 `onboarding@resend.dev`로 나가고 **Resend 계정 소유자 메일로만 수신**된다
+   - `ADMIN_PASSWORD`(20자 이상 무작위) · `ADMIN_SESSION_SECRET` · `IP_HASH_SECRET` 생성해서 Vercel 환경변수에 등록
+   - **배포 후 반드시 실제 폼으로 1건 제출해서** 저장 + 메일 수신 + `/admin` 목록 노출까지 확인
+2. **배포**: 도메인 연결 → `privacyMeta.revised`를 배포일로 → `sitemap.xml`·`robots.txt`(design-system·admin·api 차단)·OG 태그를 실제 도메인에서 확인 → 네이버 서치어드바이저·구글 서치콘솔에 sitemap 제출 → 기존 유입 URL 17개 200 확인(리다이렉트는 `/rental/*` 하나뿐)
 3. **클라이언트 데이터 반영**(받는 대로): 보호책임자 이메일(`site.ts` `privacyOfficer.email` — 전화는 채워짐), 2024~2026 성공사례(`src/content/cases.ts`)·수치(`src/content/home.ts` `stats`)·연혁(`src/content/pages/about.ts` `history`, 2023.1 이후 공백에 DevLabel), 의료/어음/PG/VAN 상품 수치·B2B 취급은행(`TODO(client)` 주석 검색), 고해상도 기관 로고(`public/images/partners/`)
-4. **배포 전 QA 한 바퀴**: 4폭(1200/1440/1920/390) 전 페이지 스크린샷, Safari/모바일 Safari에서 폰트·sticky 표 확인, `prefers-reduced-motion`, 키보드로 폼 제출, Lighthouse(이미지 LCP — 히어로 PNG 132KB·priority 적용됨)
+4. **배포 전 QA — 2026-08-24 1회차 완료.** 남은 건 Safari 하나뿐.
+   - 측정 방식: 각 페이지를 지정 폭 iframe에 띄워 `scrollWidth` 초과·깨진 이미지·h1 개수를 재는 스크립트(스크린샷 육안 확인보다 확실하다). **19페이지 × 4폭(390/1200/1440/1920) = 76조합 전부 이상 없음**, 관리자 3페이지 × 4폭도 이상 없음
+   - 내부 링크 21개 전부 200, 404가 실제 404 반환, `/rental/*` 308, robots·sitemap(18항목)에 admin·design-system 없음
+   - **Lighthouse(프로덕션 빌드, 모바일): 접근성·모범사례·SEO·Agentic 전부 100, 실패 0건.** 성능 트레이스 LCP 129ms·CLS 0(로컬호스트라 LCP 절대값은 무의미, CLS 0과 렌더차단 0ms가 의미 있는 값)
+   - 1회차에서 잡아 고친 것 3개는 아래 "QA에서 고친 것" 절 참고
+   - `prefers-reduced-motion`: CSS 3블록이 배포 CSS에 살아 있음을 런타임 확인(scroll-behavior·[data-reveal]·float/줄리빌). JS는 `case-carousel`·`counter` 둘 다 early-return
+   - 키보드: 폼 컨트롤 10개 전부 라벨 연결, 양수 tabindex 없음, 진짜 `button[type=submit]`, 허니팟은 `tabIndex={-1}`+`aria-hidden`, **검증 실패 시 첫 오류 필드로 포커스 이동**. 단 **실제 타건 테스트는 못 했다** — 브라우저 패널이 OS 포커스를 못 받아 `document.hasFocus()`가 false
+   - Safari / 모바일 Safari: **Jace가 직접 확인, 이상 없음**(2026-08-24). 이 환경에서는 Safari를 띄울 수 없으므로 앞으로도 이 항목은 Jace가 볼 것
+
+### QA에서 고친 것 (2026-08-24)
+
+- **골드 텍스트 대비 미달** — `Chip tone="gold"`(홈 "기업인증 NEW")가 4.3:1로 AA 미달. 원인은 Tailwind 4가 `@theme` 색을 oklch로 변환하면서 실제 렌더가 `#9a6400` → `#9d6908`로 밝아진 것. **토큰 계산값만 믿지 말 것.** `--color-gold-700`을 `#8a5a00`으로 낮춰 5.4:1 확보. 이 토큰은 밝은 배경 위 텍스트로만 쓰여 다른 곳에 영향 없음
+- **헤더 로고 링크 접근명 불일치(WCAG 2.5.3)** — 로고 `<img alt="(주)이지크레더블">`와 옆 텍스트가 같은 글자라 링크 내부 텍스트가 중복됐고, `aria-label="(주)이지크레더블 홈"`에 그게 다 안 들어갔다. `Logo`에 `alt` prop을 추가해 헤더에서만 `alt=""`(장식 이미지). 푸터 로고는 옆에 글자가 없으므로 alt 유지
+- **"자세히 보기" 링크 4개가 비서술적(SEO)** — **`aria-label`로는 안 고쳐진다.** Lighthouse `link-text`는 접근명이 아니라 보이는 텍스트를 본다. `<span className="sr-only">{솔루션명} </span>자세히 보기`로 DOM 텍스트만 늘렸다(화면 표시는 그대로, 접근명에 보이는 글자가 포함되어 2.5.3도 만족)
+- **관리자 화면 헤더 문제 2개** — 헤더가 `fixed`(72/88px)인데 관리자 레이아웃에 상단 여백이 없어 제목이 가렸고(`pt-28 lg:pt-36`으로 해결), 스크롤 전 헤더가 `bg-transparent text-white`라 흰 배경에 흰 로고로 안 보였다(`pathname.startsWith("/admin")`이면 항상 solid). 둘 다 배너가 있는 일반 페이지에서는 안 드러나던 문제
 5. 미결 답 받기(아래 "미결" 절) — 업무위탁 로고 스트립(홈+회사소개에 들어가 있음), factoring 서브도메인, 기준금리 분기 갱신 담당(`QUARTERLY` 주석 3곳: 소진공 기준금리, 기보 할인율)
 
 검수 시 확인한 코덱스 변경(참고): 히어로 `width/height` 1600×1000, `arrow-3d.svg` → `.png`, 서비스 카드 `self-stretch`, CTA 리드 모바일 `max-w`, 푸터 로고 `self-start`, `SubHero` 배너 모바일 `object-[85%_center]`(오른쪽 오브젝트가 보이도록), 자금 페이지 11개 01 스테이지는 그룹 카드 이미지 재사용, 회사소개 3페이지 01 스테이지도 솔루션 이미지 재사용, `/design-system/og` 재캡처. `privacyOfficer.phone`이 채워져 있다(Jace 확인값) — 이메일은 아직 빈 값.
@@ -147,6 +212,5 @@ www.ezcredible.com(한국 B2B 기업금융 컨설팅: 정책자금 · 유동성�
 
 - 지원기관·업무위탁 로고 스트립 유지 여부(홈 `Partners` + 회사소개 04 `PartnerLogos`에 넣어둠, 답변 없음)
 - factoring.ezcredible.com(별도 골드 톤 랜딩) 유지/흡수 — 팩토링 페이지(`/liquidity-funds/receivables-factoring`)가 기보 기준으로 완성돼 있어 흡수도 가능
-- 호스팅·배포처, 상담 전송 방식(이메일/시트/슬랙)
 - 클라이언트 데이터: 2024~2026 성공사례·수치·연혁, 보호책임자 이메일, 의료/어음/PG/VAN 상품 수치·B2B 취급은행 확인, 고해상도 기관 로고
 - 분기마다 갱신할 값(`QUARTERLY` 주석): 소진공 정책자금 기준금리(2026 3분기 3.85%), 기보 팩토링 기준 할인율(2026-04-01 1.50~4.20%) — 누가 언제 갱신할지

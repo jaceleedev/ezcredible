@@ -33,7 +33,9 @@
   --color-gold-400: #f5b940;
   --color-gold-500: #e0a030;
   --color-gold-600: #d99a2a;
-  --color-gold-700: #9a6400;
+  /* gold-100/50 배경 위 텍스트 전용. Tailwind 4의 oklch 변환으로 실제 렌더가 살짝 밝아져
+     #9a6400이면 4.3:1로 AA 미달이었다(Lighthouse 측정). 여유를 두고 어둡게 잡는다 */
+  --color-gold-700: #8a5a00;
 
   --color-brand: var(--color-cobalt-500);
   --color-brand-strong: var(--color-cobalt-600);

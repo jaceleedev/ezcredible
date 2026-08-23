@@ -32,7 +32,8 @@ export function Header() {
     };
   }, [open]);
 
-  const solid = scrolled || open;
+  // 관리자 화면은 어두운 배너 없이 흰 바탕으로 시작하므로 투명 헤더면 흰 로고가 보이지 않는다
+  const solid = scrolled || open || pathname.startsWith("/admin");
 
   return (
     <>
@@ -44,7 +45,7 @@ export function Header() {
     >
       <div className="mx-auto flex h-[72px] w-full max-w-(--container-site) items-center justify-between px-5 sm:px-8 lg:h-[88px]">
         <Link href="/" className="flex items-center gap-2.5" aria-label="(주)이지크레더블 홈">
-          <Logo variant="mark" tone={solid ? "blue" : "white"} priority className="h-6 sm:h-7" />
+          <Logo variant="mark" tone={solid ? "blue" : "white"} priority alt="" className="h-6 sm:h-7" />
           <span className={cn("font-sans text-[17px] font-bold tracking-tight transition-colors sm:text-lg", solid ? "text-brand" : "text-white")}>(주)이지크레더블</span>
         </Link>
 

@@ -7,6 +7,8 @@ type LogoProps = {
   tone?: "blue" | "white";
   className?: string;
   priority?: boolean;
+  /** 옆에 같은 글자가 이미 있으면 ""로 넘겨 장식 이미지로 만든다 */
+  alt?: string;
 };
 
 /**
@@ -19,12 +21,12 @@ const files = {
   lockup: { blue: "/brand/ezcredible-logo.svg", white: "/brand/ezcredible-logo-white.svg", width: 728, height: 499 },
 } as const;
 
-export function Logo({ variant = "mark", tone = "blue", className, priority }: LogoProps) {
+export function Logo({ variant = "mark", tone = "blue", className, priority, alt = "(주)이지크레더블" }: LogoProps) {
   const file = files[variant];
   return (
     <Image
       src={file[tone]}
-      alt="(주)이지크레더블"
+      alt={alt}
       width={file.width}
       height={file.height}
       priority={priority}
