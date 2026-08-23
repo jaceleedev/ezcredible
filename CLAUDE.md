@@ -17,7 +17,7 @@ www.ezcredible.com(한국 B2B 기업금융 컨설팅: 정책자금 · 유동성�
 ## 현재 상태 (2026-08-24 기준) — 코드 완료 + Vercel 프로덕션 가동, 도메인 연결만 남음
 
 완료: 디자인 시스템(`/design-system`, noindex) · 홈 · **서브페이지 17/17** · 404 · sitemap · robots · OG 이미지 · 렌탈 리다이렉트 · **코덱스 3D 이미지 21장**(`675037b`) · **상담 저장·알림·관리자 페이지**(`2392272`) · **Vercel 배포 + 폼→저장→메일→admin 전 구간 검증**(아래 "배포 상태")
-마지막 커밋 `4b2537e`. **2026-08-24 2차 작업(FactStrip 타이포 통일 · 01 이미지 캡 · admin 대시보드 분리 — 아래 절)은 아직 커밋 전.**
+마지막 커밋 `3f3832e`(2026-08-24 2차 작업 — 아래 절). 프로덕션 반영 확인 완료.
 
 ### 인프라 확정 (2026-08-24, Jace 결정) — 전부 무료 구간
 
@@ -39,13 +39,13 @@ www.ezcredible.com(한국 B2B 기업금융 컨설팅: 정책자금 · 유동성�
 - Vercel 환경변수는 **Production만 체크**(프리뷰 배포가 운영 DB에 쓰지 않게): `DATABASE_URL`(production 브랜치) `RESEND_API_KEY` `CONSULTATION_NOTIFY_TO`(Jace 주소 하나) `ADMIN_PASSWORD` `ADMIN_SESSION_SECRET` `IP_HASH_SECRET` + `ENABLE_EXPERIMENTAL_COREPACK`(이것만 3개 환경).
   `CONSULTATION_NOTIFY_FROM`은 도메인 인증 후 추가. **`CONSULTATION_REPLY_TO`는 키 자체를 제거했다(2026-08-24)** — 폼이 고객 이메일을 안 받아 답장 시나리오가 없다. 코드는 계속 지원하므로(빈 값이면 헤더 생략) 여러 명이 수신하게 되면 그때 다시 넣으면 된다
 - **검증 완료(2026-08-24)**: 프로덕션 폼 1건 제출 → 저장 + 알림 메일 수신(스팸 아님, timestamp 정상) + admin 노출 전부 확인.
-  테스트 행 1건("테스트" / 010-0000-0000 / 설명서 스타일 문의)은 대표님 인수인계 안내 겸 production에 남겨 둠. dev 브랜치에도 같은 내용 1건(Jace 확인용)
+  테스트 행은 위 스키마 재생성 때 사라졌다. dev 브랜치에는 같은 내용 1건이 남아 있다(Jace 확인용)
 - **삽질 기록 — Resend 422 `Invalid 'to' field. The email address contains non-ASCII characters.`**: Vercel 대시보드에 이메일 값을 넣을 때 전각 ＠(U+FF20)나 복사-붙여넣기에 딸려온 보이지 않는 문자가 섞이면 발송이 전량 실패한다. **값은 영문 입력 모드로 직접 타이핑**할 것. 이때 notify_error → admin 목록 ⚠ 안전망이 설계대로 동작하는 것도 실확인했다
 - 알림 메일의 "관리자 페이지에서 보기" 버튼은 www.ezcredible.com 기준 URL이라 도메인 연결 전엔 안 열린다(정상)
-- **⚠ 다음 배포 전에 Vercel 환경변수에 `ADMIN_EMAIL`을 추가할 것**(2026-08-24 신설). 없으면 배포 직후 `/admin`에 아무도 못 들어간다 — 로그인 화면이 빠진 변수 이름을 알려 준다
-- **⚠ 다음 배포 때 production 브랜치에 `db/schema.sql`을 다시 실행할 것** — `admin_access_log`(로그인 rate limit·접속기록) 테이블이 새로 생겼다. 멱등이라 전체를 그대로 붙여넣으면 된다. 안 해도 로그인은 정상 동작하지만(설계상 DB 실패에 걸지 않는다) rate limit과 접속기록만 동작하지 않는다. dev 브랜치에는 적용 완료
+- `ADMIN_EMAIL`은 2026-08-24 Vercel에 등록 완료(두 계정). 없으면 `/admin`에 아무도 못 들어가며 로그인 화면이 빠진 변수 이름을 알려 준다
+- production 브랜치 스키마는 2026-08-24 **테이블을 드랍하고 `db/schema.sql`로 새로 생성**(Jace) — `admin_access_log` 포함. **이때 프로덕션 테스트 상담 행도 같이 없어졌다**(필요하면 폼으로 다시 1건 넣을 것). dev 브랜치에도 적용 완료
 
-### 2026-08-24 2차 작업 — FactStrip 통일 · 01 이미지 캡 · admin 대시보드 분리 (커밋 전)
+### 2026-08-24 2차 작업 — FactStrip 통일 · 01 이미지 캡 · admin 대시보드 분리 (`3f3832e`)
 
 - **Stat/FactStrip 타이포 통일**(`stat.tsx`·`fact-strip.tsx`): compact(서브페이지 수치 칸) 값 크기를 **전 칸 동일 28px/xl 32px 한 단계로 고정**(길이별 분기 제거), **한글 포함 값만 8% 축소** — SUIT은 한글이 라틴·숫자보다 크게 그려져 같은 px면 한글만 도드라진다(광학 보정). `Fact`에 **`unit`(값 옆 짧은 단위, 절대 안 꺾임) / `sub`(값 아래 13px 회색 꼬리 정보)** 분리 — 콘텐츠 3개 파일의 긴 단위("곳 · NICE · KoDATA · 이크레더블" 등)를 전부 sub로 이관했다. **새 fact를 쓸 때 긴 단위는 unit이 아니라 sub에 넣을 것.** 모바일 1열 전환 휴리스틱은 한글 4자/라틴 8자 기준. 검증: FactStrip 있는 12페이지 × 390/960/1024/1200/1440/1920 iframe 실측 — 단위 줄바꿈·오버플로 0건
 - **01 섹션 이미지 캡**(`numbered-section.tsx`): aside(이미지 스테이지)가 lg 미만 1열에서 컨테이너 전폭으로 커져 800px 원본이 최대 4배 업스케일되던 문제 — **480px(데스크탑 열과 동일) 캡 + 중앙 정렬**. `sizes`는 `(min-width: 560px) 480px, 100vw`로 7곳 갱신
