@@ -54,7 +54,7 @@ const officerRows = [
 export default function PrivacyPolicyPage() {
   return (
     <>
-      <SubHero href={page.href} title={page.title} subtitle={page.subtitle} />
+      <SubHero href={page.href} title={page.title} subtitle={page.subtitle} image={{ src: "/images/banners/support.jpg", alt: "헤드셋을 쓴 상담 전문가와 말풍선 3D 오브젝트" }} />
 
       <Container size="narrow" className="flex flex-col gap-12 pb-24 pt-20 md:gap-14 md:pt-24">
         <header className="flex flex-col gap-5">
@@ -85,7 +85,9 @@ export default function PrivacyPolicyPage() {
             ))}
             {section.id === "officer" && (
               <div className="relative">
-                {!privacyOfficer.email && <DevLabel className="-top-3 right-3">보호책임자 연락처 필요 · TODO(client)</DevLabel>}
+                {!privacyOfficer.email && !privacyOfficer.phone && (
+                  <DevLabel className="-top-3 right-3">보호책임자 연락처 필요 · TODO(client)</DevLabel>
+                )}
                 <KeyValueTable rows={officerRows} />
               </div>
             )}

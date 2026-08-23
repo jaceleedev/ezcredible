@@ -27,7 +27,7 @@ export const metadata: Metadata = pageMetadata({ title: page.title, description:
 export default function CertificationPage() {
   return (
     <>
-      <SubHero href={page.href} title={page.title} subtitle={page.subtitle} image={page.banner} imageLabel="임시 배너 · 코덱스 2000×600으로 교체" />
+      <SubHero href={page.href} title={page.title} subtitle={page.subtitle} image={page.banner} />
 
       <FundIntro page={page} title="기업인증이란?" />
 

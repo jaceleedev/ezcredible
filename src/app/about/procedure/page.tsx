@@ -16,13 +16,21 @@ export const metadata: Metadata = pageMetadata({ title: page.title, description:
 export default function ProcedurePage() {
   return (
     <>
-      <SubHero href={page.href} title={page.title} subtitle={page.subtitle} image={page.banner} imageLabel="임시 배너 · 코덱스 2000×600으로 교체" />
+      <SubHero href={page.href} title={page.title} subtitle={page.subtitle} image={page.banner} />
 
       <NumberedSection
         index={1}
         title="상담부터 관리까지, 여섯 단계"
         aside={
-          <ImageStage tint="mint" art="check" aspect="photo" label="3D 이미지 자리 · 코덱스" sizes="(min-width: 1024px) 480px, 100vw" className="rounded-[28px] shadow-card" />
+          <ImageStage
+            tint="mint"
+            art="check"
+            src="/images/services/checklist.png"
+            alt="체크리스트로 절차를 관리하는 전문가"
+            aspect="photo"
+            sizes="(min-width: 1024px) 480px, 100vw"
+            className="rounded-[28px] shadow-card"
+          />
         }
       >
         <Callout>

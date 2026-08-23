@@ -11,7 +11,7 @@ export const companyPage = {
   href: "/about/company",
   title: "회사소개",
   subtitle: "기업의 가능성을 현실로 만드는 파트너",
-  banner: { src: "/images/temp/sub-banner.jpg", alt: "" },
+  banner: { src: "/images/banners/about.jpg", alt: "빌딩 앞에서 악수하는 두 전문가 3D 오브젝트" },
   founded: "2019년 7월",
   intro:
     "(주)이지크레더블은 2019년 설립 이후 정책자금·유동성자금·성장 솔루션 세 축으로 중소기업의 자금 문제를 풀어 온 기업 금융 솔루션 회사입니다. 금융업계에서 오랜 경력을 쌓은 전문가가 상담 신청부터 자금 확보, 그 이후의 관리까지 함께합니다.",
@@ -44,7 +44,7 @@ export const historyPage = {
   href: "/about/history",
   title: "회사연혁",
   subtitle: "저희가 걸어온 길입니다.",
-  banner: { src: "/images/temp/sub-banner.jpg", alt: "" },
+  banner: { src: "/images/banners/about.jpg", alt: "빌딩 앞에서 악수하는 두 전문가 3D 오브젝트" },
   intro:
     "2019년 7월 법인 설립 이후 신용평가·B2B 결제·팩토링·보증보험·VAN/PG까지, 기업 자금에 필요한 파트너십을 한 해에 두세 곳씩 넓혀 왔습니다. 아래는 협약·위탁 계약을 기준으로 정리한 연혁입니다.",
   ctaTitle: "다음 연혁을 함께 쓸 기업을 찾습니다",
@@ -74,7 +74,7 @@ export const procedurePage = {
   href: "/about/procedure",
   title: "업무절차",
   subtitle: "안전하고 투명한 절차를 통해 신뢰를 드립니다.",
-  banner: { src: "/images/temp/sub-banner.jpg", alt: "" },
+  banner: { src: "/images/banners/about.jpg", alt: "빌딩 앞에서 악수하는 두 전문가 3D 오브젝트" },
   intro:
     "상담 신청부터 솔루션 성공 이후의 관리까지 여섯 단계입니다. 단계마다 담당자가 무엇을 하고 고객사가 무엇을 준비하면 되는지 미리 알려 드리기 때문에, 진행 중에 갑자기 서류가 늘거나 일정이 밀리지 않습니다.",
   ctaTitle: "첫 단계는 상담 신청입니다",
@@ -109,7 +109,7 @@ export const directionsPage = {
   href: "/about/directions",
   title: "오시는길",
   subtitle: "언제든지 방문을 환영합니다.",
-  banner: { src: "/images/temp/sub-banner.jpg", alt: "" },
+  banner: { src: "/images/banners/about.jpg", alt: "빌딩 앞에서 악수하는 두 전문가 3D 오브젝트" },
   building: "대성디폴리스 지식산업센터 B동 2006-2호",
   /** 지도 앱 검색어 */
   mapQuery: "서울 금천구 서부샛길 606 대성디폴리스",

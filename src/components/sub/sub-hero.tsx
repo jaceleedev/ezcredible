@@ -47,7 +47,14 @@ export function SubHero({ href, title, subtitle, image, imageLabel, hideSubNav =
       <section className={cn("relative overflow-hidden text-white", image ? "bg-navy" : "stage-cobalt")}>
         {image ? (
           <>
-            <Image src={image.src} alt={image.alt ?? ""} fill priority sizes="100vw" className="object-cover" />
+            <Image
+              src={image.src}
+              alt={image.alt ?? ""}
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-[85%_center] md:object-center"
+            />
             <div
               aria-hidden="true"
               className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,30,77,0.55)_0%,rgba(11,30,77,0.35)_50%,rgba(11,30,77,0.78)_100%)]"

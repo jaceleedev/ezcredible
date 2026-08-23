@@ -10,7 +10,7 @@ export function Footer() {
     <footer className="bg-navy-deep text-white">
       <Container className="flex flex-col gap-10 py-14 md:py-16">
         <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
-          <Logo variant="lockup" tone="white" className="h-20" />
+          <Logo variant="lockup" tone="white" className="h-20 self-start" />
           <div className="flex flex-col gap-6 md:items-end">
             <div className="flex items-center gap-4 text-sm font-semibold">
               <Link href={consultationHref} className="hover:text-cobalt-300">

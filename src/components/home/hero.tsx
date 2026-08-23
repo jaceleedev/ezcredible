@@ -6,7 +6,6 @@ import { Pill } from "@/components/ui/pill";
 import { Reveal } from "@/components/motion/reveal";
 import { cases } from "@/content/cases";
 import { consultationHref } from "@/content/site";
-import { DevLabel } from "./dev-label";
 
 export function Hero() {
   const featured = cases[0];
@@ -62,16 +61,16 @@ export function Hero() {
         </div>
 
         <div className="relative mx-auto w-full max-w-[560px] lg:mx-0 lg:h-[560px] lg:max-w-none">
-          {/* 흰 원·링은 섹션이 아니라 이 컬럼 기준 — 화면 폭이 넓어져도 돈주머니와 같이 움직인다 */}
+          {/* 흰 원·링은 섹션이 아니라 이 컬럼 기준 — 화면 폭이 넓어져도 메인 3D 오브젝트와 같이 움직인다 */}
           <div aria-hidden="true" className="absolute -top-1 right-10 hidden size-[620px] rounded-full bg-white/10 lg:block" />
           <div aria-hidden="true" className="absolute -right-[30px] -top-[75px] hidden size-[760px] rounded-full border border-white/14 lg:block" />
           <Reveal variant="scale" delay={200} className="lg:absolute lg:-right-5 lg:top-2 lg:w-[680px]">
             <div className="animate-float">
               <Image
-                src="/images/temp/hero-3d.png"
+                src="/images/hero-3d.png"
                 alt="자금 확보를 상징하는 3D 오브젝트"
-                width={880}
-                height={511}
+                width={1600}
+                height={1000}
                 priority
                 sizes="(min-width: 1024px) 680px, 90vw"
                 className="h-auto w-full drop-shadow-[0_40px_60px_rgba(4,12,40,0.45)]"
@@ -100,8 +99,6 @@ export function Hero() {
             <span className="text-white/80">누적 솔루션 금액</span>
             </div>
           </Reveal>
-
-          <DevLabel className="bottom-6 right-0 hidden lg:block">임시 이미지 · 코덱스 3D로 교체</DevLabel>
         </div>
       </Container>
     </section>

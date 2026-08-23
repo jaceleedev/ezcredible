@@ -21,7 +21,7 @@ const embedUrl = `https://www.google.com/maps?q=${encodeURIComponent(company.add
 export default function DirectionsPage() {
   return (
     <>
-      <SubHero href={page.href} title={page.title} subtitle={page.subtitle} image={page.banner} imageLabel="임시 배너 · 코덱스 2000×600으로 교체" />
+      <SubHero href={page.href} title={page.title} subtitle={page.subtitle} image={page.banner} />
 
       <NumberedSection
         index={1}

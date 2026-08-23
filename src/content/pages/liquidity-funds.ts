@@ -17,7 +17,8 @@ export const factoring: FundPage = {
   href: "/liquidity-funds/receivables-factoring",
   title: "매출채권 팩토링",
   subtitle: "대출 없이, 받을 돈을 먼저 현금으로 바꿉니다.",
-  banner: { src: "/images/temp/sub-banner.jpg", alt: "" },
+  banner: { src: "/images/banners/factoring.jpg", alt: "매출채권 서류와 흐르는 금화 3D 오브젝트" },
+  image: { src: "/images/solutions/liquidity-funds.png", alt: "흐르는 금화와 모래시계" },
   art: "coins",
   artTint: "mint",
   definition: {
@@ -129,7 +130,8 @@ export const medical: FundPage = {
   href: "/liquidity-funds/medical-business-loans",
   title: "의료사업자 대출",
   subtitle: "의료사업자의 원활한 자금운용을 도와드립니다.",
-  banner: { src: "/images/temp/sub-banner.jpg", alt: "" },
+  banner: { src: "/images/banners/medical.jpg", alt: "의료기관과 금화 3D 오브젝트" },
+  image: { src: "/images/solutions/liquidity-funds.png", alt: "흐르는 금화와 모래시계" },
   art: "chat",
   artTint: "sky",
   definition: {
@@ -203,7 +205,8 @@ export const bills: FundPage = {
   href: "/liquidity-funds/electronic-bills-discount",
   title: "전자어음할인",
   subtitle: "유동성 확보를 위한 신속한 해결책입니다.",
-  banner: { src: "/images/temp/sub-banner.jpg", alt: "" },
+  banner: { src: "/images/banners/bills.jpg", alt: "전자어음 서류와 시계 3D 오브젝트" },
+  image: { src: "/images/solutions/liquidity-funds.png", alt: "흐르는 금화와 모래시계" },
   art: "document",
   artTint: "lavender",
   definition: {

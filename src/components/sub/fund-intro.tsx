@@ -19,6 +19,8 @@ export function FundIntro({ page, title }: { page: FundPage; title?: string }) {
           <ImageStage
             tint={page.artTint}
             art={page.art}
+            src={page.image?.src}
+            alt={page.image?.alt ?? page.title}
             aspect="photo"
             label="3D 이미지 자리 · 코덱스"
             sizes="(min-width: 1024px) 480px, 100vw"

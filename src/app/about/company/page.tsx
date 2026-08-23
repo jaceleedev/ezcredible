@@ -24,13 +24,21 @@ export const metadata: Metadata = pageMetadata({ title: page.title, description:
 export default function CompanyPage() {
   return (
     <>
-      <SubHero href={page.href} title={page.title} subtitle={page.subtitle} image={page.banner} imageLabel="임시 배너 · 코덱스 2000×600으로 교체" />
+      <SubHero href={page.href} title={page.title} subtitle={page.subtitle} image={page.banner} />
 
       <NumberedSection
         index={1}
         title="이지크레더블은"
         aside={
-          <ImageStage tint="sky" art="chat" aspect="photo" label="3D 이미지 자리 · 코덱스" sizes="(min-width: 1024px) 480px, 100vw" className="rounded-[28px] shadow-card" />
+          <ImageStage
+            tint="sky"
+            art="chat"
+            src="/images/services/expert.png"
+            alt="말풍선 옆의 기업 금융 전문가"
+            aspect="photo"
+            sizes="(min-width: 1024px) 480px, 100vw"
+            className="rounded-[28px] shadow-card"
+          />
         }
       >
         <Callout>

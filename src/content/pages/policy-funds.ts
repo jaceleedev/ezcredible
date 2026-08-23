@@ -22,7 +22,8 @@ export type FundPage = {
   subtitle: string;
   /** 배너 사진 — 코덱스 2000×600이 오면 교체. 지금은 캔버스의 임시 사진 */
   banner: { src: string; alt: string };
-  /** 01 섹션 이미지 스테이지 자리표시 */
+  /** 01 섹션 이미지 스테이지 — 코덱스 3D 렌더(투명 PNG). 없으면 art 자리표시 */
+  image?: { src: string; alt: string };
   art: StageArtKind;
   artTint: "sky" | "mint" | "lavender" | "sand";
   /** 01 정의 콜아웃: 굵은 구절 + 나머지 */
@@ -128,7 +129,8 @@ export const operating: FundPage = {
   href: "/policy-funds/operating",
   title: "운전자금",
   subtitle: "안정적인 경영을 위한 필수 자금을 지원합니다.",
-  banner: { src: "/images/temp/sub-banner.jpg", alt: "" },
+  banner: { src: "/images/banners/operating.jpg", alt: "운전자금 서류와 금화 3D 오브젝트" },
+  image: { src: "/images/solutions/policy-funds.png", alt: "정책자금 서류와 금화" },
   art: "coins",
   artTint: "sky",
   definition: {
@@ -194,7 +196,8 @@ export const facility: FundPage = {
   href: "/policy-funds/facility",
   title: "시설자금",
   subtitle: "시설 투자로 경쟁력을 향상시킵니다.",
-  banner: { src: "/images/temp/sub-banner.jpg", alt: "" },
+  banner: { src: "/images/banners/facility.jpg", alt: "공장과 설비 투자 3D 오브젝트" },
+  image: { src: "/images/solutions/policy-funds.png", alt: "정책자금 서류와 금화" },
   art: "bars",
   artTint: "lavender",
   definition: {
@@ -255,7 +258,8 @@ export const smallBusiness: FundPage = {
   href: "/policy-funds/small-business",
   title: "소상공인자금",
   subtitle: "소상공인의 경영 안정과 성장을 위한 정책자금입니다.",
-  banner: { src: "/images/temp/sub-banner.jpg", alt: "" },
+  banner: { src: "/images/banners/small-business.jpg", alt: "소상공인 상점과 금화 3D 오브젝트" },
+  image: { src: "/images/solutions/policy-funds.png", alt: "정책자금 서류와 금화" },
   art: "shelf",
   artTint: "mint",
   definition: {
@@ -354,7 +358,8 @@ export const b2bPurchase: FundPage = {
   href: "/policy-funds/b2b-purchase",
   title: "B2B구매자금",
   subtitle: "기업 간 거래를 더욱 강화합니다.",
-  banner: { src: "/images/temp/sub-banner.jpg", alt: "" },
+  banner: { src: "/images/banners/b2b-purchase.jpg", alt: "기업 간 거래를 상징하는 3D 오브젝트" },
+  image: { src: "/images/solutions/policy-funds.png", alt: "정책자금 서류와 금화" },
   art: "document",
   artTint: "sand",
   definition: {

@@ -17,7 +17,13 @@ export function Services() {
           {services.map((service, i) => (
             <Reveal key={service.title} delay={i * 100} className="flex">
               <Card padding="none" className="w-full items-center text-center shadow-soft">
-                <ImageStage tint={service.tint} art={service.art} src={service.image} alt={service.title} className="m-4 rounded-2xl" />
+                <ImageStage
+                  tint={service.tint}
+                  art={service.art}
+                  src={service.image}
+                  alt={service.title}
+                  className="m-4 self-stretch rounded-2xl"
+                />
                 <div className="flex flex-col gap-2.5 px-8 pb-9 pt-3">
                   <h3 className="font-display text-[22px] font-extrabold tracking-tight">{service.title}</h3>
                   <p className="text-[15px] leading-relaxed text-body">{service.description}</p>

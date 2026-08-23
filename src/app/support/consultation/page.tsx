@@ -19,7 +19,12 @@ const steps = [
 export default function ConsultationPage() {
   return (
     <>
-      <SubHero href={consultationHref} title="상담신청" subtitle="이지크레더블의 솔루션에 대해 궁금한 사항을 남겨 주세요." />
+      <SubHero
+        href={consultationHref}
+        title="상담신청"
+        subtitle="이지크레더블의 솔루션에 대해 궁금한 사항을 남겨 주세요."
+        image={{ src: "/images/banners/support.jpg", alt: "헤드셋을 쓴 상담 전문가와 말풍선 3D 오브젝트" }}
+      />
 
       <Container className="grid gap-12 pb-24 pt-20 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16 lg:pb-28 lg:pt-24">
         <Reveal className="flex flex-col gap-8">

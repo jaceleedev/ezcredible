@@ -43,7 +43,13 @@ export function CTABand({
     ) : (
       image && (
         <>
-          <Image src={image.src} alt={image.alt} fill sizes="100vw" className="object-cover object-right" />
+          <Image
+            src={image.src}
+            alt={image.alt}
+            fill
+            sizes="100vw"
+            className="object-cover object-right"
+          />
           <div aria-hidden="true" className="absolute inset-0 bg-linear-to-r from-navy/80 via-navy/45 to-navy/0" />
         </>
       )
@@ -54,7 +60,9 @@ export function CTABand({
       <div className="flex flex-col gap-4">
         {!inset && eyebrow && <div className="text-sm font-bold tracking-[0.1em] text-gold-400">{eyebrow}</div>}
         <h2 className={cn("text-white", inset ? "text-h2" : "text-h1")}>{title}</h2>
-        {lead && <p className="text-lead text-white/88">{lead}</p>}
+        {lead && (
+          <p className={cn("text-lead text-white/88", variant === "photo" && "max-w-[220px] md:max-w-none")}>{lead}</p>
+        )}
       </div>
       <Button href={ctaHref} variant="white" size="lg" className={inset ? "self-start md:self-auto" : "self-start"}>
         {ctaLabel}

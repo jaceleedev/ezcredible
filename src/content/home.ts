@@ -26,6 +26,7 @@ export const solutions: Solution[] = [
     href: "/policy-funds/operating",
     tint: "sky",
     art: "document",
+    image: "/images/solutions/policy-funds.png",
     items: [
       { label: "운전자금", href: "/policy-funds/operating" },
       { label: "B2B구매자금", href: "/policy-funds/b2b-purchase" },
@@ -39,6 +40,7 @@ export const solutions: Solution[] = [
     href: "/liquidity-funds/receivables-factoring",
     tint: "mint",
     art: "coins",
+    image: "/images/solutions/liquidity-funds.png",
     items: [
       { label: "매출채권 팩토링", href: "/liquidity-funds/receivables-factoring" },
       { label: "의료사업자 대출", href: "/liquidity-funds/medical-business-loans" },
@@ -51,6 +53,7 @@ export const solutions: Solution[] = [
     href: "/growth/corporate-credit-evaluation",
     tint: "lavender",
     art: "bars",
+    image: "/images/solutions/growth.png",
     items: [
       { label: "기업신용평가", href: "/growth/corporate-credit-evaluation" },
       { label: "PG", href: "/growth/pg" },
@@ -61,9 +64,27 @@ export const solutions: Solution[] = [
 ];
 
 export const services: { title: string; description: string; tint: "sky" | "mint" | "lavender"; art: StageArtKind; image?: string }[] = [
-  { title: "전문가가 끝까지 함께", description: "기업 금융 전문가가 상담 신청부터 자금 확보까지 함께합니다.", tint: "sky", art: "chat" },
-  { title: "종합 솔루션 제공", description: "타사에 비해 다양한 자금과 상품을 다루고 있어 종합적인 솔루션 제공이 가능합니다.", tint: "mint", art: "shelf" },
-  { title: "성공 이후에도 계속", description: "솔루션 성공 이후에도 지속적인 관리와 더불어 추가적인 솔루션을 제안합니다.", tint: "lavender", art: "check" },
+  {
+    title: "전문가가 끝까지 함께",
+    description: "기업 금융 전문가가 상담 신청부터 자금 확보까지 함께합니다.",
+    tint: "sky",
+    art: "chat",
+    image: "/images/services/expert.png",
+  },
+  {
+    title: "종합 솔루션 제공",
+    description: "타사에 비해 다양한 자금과 상품을 다루고 있어 종합적인 솔루션 제공이 가능합니다.",
+    tint: "mint",
+    art: "shelf",
+    image: "/images/services/shelf.png",
+  },
+  {
+    title: "성공 이후에도 계속",
+    description: "솔루션 성공 이후에도 지속적인 관리와 더불어 추가적인 솔루션을 제안합니다.",
+    tint: "lavender",
+    art: "check",
+    image: "/images/services/checklist.png",
+  },
 ];
 
 /** 기업 인증 — 파트너 지속가능경영연구원(ISMRI)의 서비스 분류를 따른다 */

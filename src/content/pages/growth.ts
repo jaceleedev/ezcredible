@@ -18,7 +18,8 @@ export const credit: FundPage = {
   href: "/growth/corporate-credit-evaluation",
   title: "기업신용평가",
   subtitle: "기업의 신용을 관리하는 것이 곧 경쟁력입니다.",
-  banner: { src: "/images/temp/sub-banner.jpg", alt: "" },
+  banner: { src: "/images/banners/growth.jpg", alt: "상승 그래프와 신용등급 배지 3D 오브젝트" },
+  image: { src: "/images/solutions/growth.png", alt: "상승 막대그래프와 화살표" },
   art: "bars",
   artTint: "sky",
   definition: {
@@ -150,7 +151,8 @@ export const pg: FundPage = {
   href: "/growth/pg",
   title: "PG",
   subtitle: "쾌적한 결제 경험과 안전한 거래 환경을 만들어드립니다.",
-  banner: { src: "/images/temp/sub-banner.jpg", alt: "" },
+  banner: { src: "/images/banners/growth.jpg", alt: "상승 그래프와 신용등급 배지 3D 오브젝트" },
+  image: { src: "/images/solutions/growth.png", alt: "상승 막대그래프와 화살표" },
   art: "shelf",
   artTint: "lavender",
   definition: {
@@ -223,7 +225,8 @@ export const van: FundPage = {
   href: "/growth/van",
   title: "VAN",
   subtitle: "매장에서의 결제를 더욱 간편하고 빠르게 하세요.",
-  banner: { src: "/images/temp/sub-banner.jpg", alt: "" },
+  banner: { src: "/images/banners/growth.jpg", alt: "상승 그래프와 신용등급 배지 3D 오브젝트" },
+  image: { src: "/images/solutions/growth.png", alt: "상승 막대그래프와 화살표" },
   art: "chat",
   artTint: "mint",
   definition: {
@@ -299,7 +302,8 @@ export const certification: FundPage = {
   href: "/growth/certification",
   title: "기업인증",
   subtitle: "인증으로 더 유리한 자금 조건을 만드세요.",
-  banner: { src: "/images/temp/sub-banner.jpg", alt: "" },
+  banner: { src: "/images/banners/certification.jpg", alt: "인증서와 골드 메달 3D 오브젝트" },
+  image: { src: "/images/certification.png", alt: "인증서와 골드 메달" },
   art: "check",
   artTint: "sand",
   definition: {

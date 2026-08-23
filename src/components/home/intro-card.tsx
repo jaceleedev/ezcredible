@@ -13,11 +13,11 @@ export function IntroCard() {
         <div className="grid overflow-hidden rounded-4xl bg-navy text-white shadow-float lg:grid-cols-[1.05fr_1fr]">
           <div className="relative flex flex-col items-start justify-center gap-4 overflow-hidden p-8 sm:p-12 lg:p-14">
             <Image
-              src="/images/arrow-3d.svg"
+              src="/images/arrow-3d.png"
               alt=""
               aria-hidden="true"
-              width={700}
-              height={390}
+              width={1400}
+              height={780}
               className="pointer-events-none absolute -bottom-8 -right-10 w-[420px] opacity-90"
             />
             <div className="relative text-[13px] font-bold tracking-[0.12em] text-cobalt-300">회사소개</div>

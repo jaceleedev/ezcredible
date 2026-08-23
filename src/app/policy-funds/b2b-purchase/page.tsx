@@ -17,7 +17,7 @@ export const metadata: Metadata = pageMetadata({ title: page.title, description:
 export default function B2BPurchasePage() {
   return (
     <>
-      <SubHero href={page.href} title={page.title} subtitle={page.subtitle} image={page.banner} imageLabel="임시 배너 · 코덱스 2000×600으로 교체" />
+      <SubHero href={page.href} title={page.title} subtitle={page.subtitle} image={page.banner} />
 
       <FundIntro page={page} title="B2B구매자금 대출이란?" />
 
@@ -42,8 +42,9 @@ export default function B2BPurchasePage() {
           <ImageStage
             tint="sky"
             art="check"
+            src="/images/solutions/policy-funds.png"
+            alt="B2B 구매자금 보증을 상징하는 정책자금 서류"
             aspect="photo"
-            label="3D 이미지 자리 · 코덱스"
             sizes="(min-width: 1024px) 480px, 100vw"
             className="rounded-[28px] shadow-card"
           />

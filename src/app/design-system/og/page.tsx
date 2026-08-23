@@ -43,12 +43,12 @@ export default function OgCardPage() {
         </div>
 
         <Image
-          src="/images/temp/hero-3d.png"
+          src="/images/hero-3d.png"
           alt=""
-          width={880}
-          height={511}
+          width={1600}
+          height={1000}
           priority
-          className="absolute -right-6 top-[120px] w-[560px] drop-shadow-[0_40px_60px_rgba(4,12,40,0.45)]"
+          className="absolute right-2 top-[120px] w-[560px] drop-shadow-[0_40px_60px_rgba(4,12,40,0.45)]"
         />
       </div>
     </div>

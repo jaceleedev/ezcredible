@@ -78,15 +78,12 @@ export const nav: NavGroup[] = [
 
 export const consultationHref = "/support/consultation";
 
-/**
- * 개인정보 보호책임자 — 개인정보처리방침 제12조에 렌더된다.
- * TODO(client): 이메일·전화 확인 전까지 비워 둔다(비어 있으면 페이지가 표시하지 않는다).
- */
+/** 개인정보 보호책임자 — 개인정보처리방침 제12조에 렌더된다. 확인된 연락처만 표시한다. */
 export const privacyOfficer: { name: string; title: string; email: string; phone: string } = {
   name: "이주환",
   title: "대표이사",
   email: "",
-  phone: "",
+  phone: "010-2747-4363",
 };
 
 /** 상담 신청 폼의 희망 솔루션 — value는 URL 쿼리(?topic=)와 API 검증에 같이 쓴다 */

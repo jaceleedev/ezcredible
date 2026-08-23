@@ -18,13 +18,21 @@ const partnerCount = history.filter((entry) => !entry.partner.includes("설립")
 export default function HistoryPage() {
   return (
     <>
-      <SubHero href={page.href} title={page.title} subtitle={page.subtitle} image={page.banner} imageLabel="임시 배너 · 코덱스 2000×600으로 교체" />
+      <SubHero href={page.href} title={page.title} subtitle={page.subtitle} image={page.banner} />
 
       <NumberedSection
         index={1}
         title="파트너십으로 쌓아 온 시간"
         aside={
-          <ImageStage tint="lavender" art="bars" aspect="photo" label="3D 이미지 자리 · 코덱스" sizes="(min-width: 1024px) 480px, 100vw" className="rounded-[28px] shadow-card" />
+          <ImageStage
+            tint="lavender"
+            art="bars"
+            src="/images/solutions/growth.png"
+            alt="시간에 따른 성장을 상징하는 상승 그래프"
+            aspect="photo"
+            sizes="(min-width: 1024px) 480px, 100vw"
+            className="rounded-[28px] shadow-card"
+          />
         }
       >
         <p className="text-base leading-relaxed text-body">{page.intro}</p>
