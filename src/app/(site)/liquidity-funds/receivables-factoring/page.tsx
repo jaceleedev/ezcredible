@@ -13,12 +13,15 @@ import { KeyValueTable } from "@/components/ui/key-value-table";
 import { Pill } from "@/components/ui/pill";
 import { Reveal } from "@/components/motion/reveal";
 import { cn } from "@/lib/cn";
+import { FactStrip } from "@/components/sub/fact-strip";
 import {
   factoring as page,
   factoringBenefits,
   factoringComparison,
   factoringProcedure,
+  factoringSimulation,
   factoringTerms,
+  factoringUseCases,
   recourseNote,
 } from "@/content/pages/liquidity-funds";
 
@@ -53,7 +56,7 @@ export default function ReceivablesFactoringPage() {
       <NumberedSection
         index={4}
         title="판매기업과 구매기업, 양쪽 모두의 이점"
-        lead="판매기업은 자금과 재무 안정성을, 구매기업은 결제 편의와 상생협력 평가를 얻습니다. 구매기업에 금융비용이 붙지 않는 점이 거래처를 설득하는 포인트입니다."
+        lead="판매기업은 5일 안에 현금을, 구매기업은 최장 90일의 결제 여유를 얻습니다. 한쪽만 좋은 구조가 아니라서 거래처를 설득하기가 수월합니다."
       >
         <div className="grid gap-6 lg:grid-cols-2">
           {factoringBenefits.map((group, g) => {
@@ -90,18 +93,47 @@ export default function ReceivablesFactoringPage() {
         </div>
       </NumberedSection>
 
-      <NumberedSection index={5} title="이용 요건 · 한도 · 할인율" lead="기술보증기금 중소기업팩토링 기준입니다. 할인율은 구매기업의 팩토링 등급에 따라 정해지고 시장금리에 따라 바뀝니다.">
+      <NumberedSection
+        index={5}
+        title="이럴 때 씁니다"
+        lead="받을 돈은 장부에 있는데 당장 쓸 현금이 없을 때, 그리고 지금 물건을 사 둬야 하는데 대금 낼 여유가 없을 때 쓰는 방법입니다."
+      >
+        <div className="grid gap-5 md:grid-cols-3 md:gap-6">
+          {factoringUseCases.map((c, i) => (
+            <Reveal key={c.industry} delay={i * 90} className="flex">
+              <Card padding="lg" className="w-full gap-3.5">
+                <Pill tone="brand" className="self-start">
+                  {c.industry}
+                </Pill>
+                <div className="font-display text-lg font-extrabold tracking-tight text-ink">{c.title}</div>
+                <p className="text-[15px] leading-relaxed text-body">{c.body}</p>
+              </Card>
+            </Reveal>
+          ))}
+        </div>
+
+        {/* 실제 실적이 아니라 모델 계산이므로 제목과 주석 양쪽에서 시뮬레이션임을 밝힌다 */}
+        <div className="flex flex-col gap-3 pt-4">
+          <h3 className="text-h3">자금 회전이 빨라지면 — 시뮬레이션</h3>
+          <FactStrip facts={factoringSimulation.map((f) => ({ label: f.label, value: f.value, sub: f.sub }))} />
+          <p className="px-1 text-[13px] leading-relaxed text-muted">
+            거래대금을 빨리 회수해 같은 자본으로 거래 횟수를 늘렸을 때를 가정한 모델 계산입니다. 실제 결과는 업종·거래 조건에 따라 다릅니다.
+          </p>
+        </div>
+      </NumberedSection>
+
+      <NumberedSection index={6} title="이용 조건" lead="담보나 보증 없이, 세금계산서로 확인되는 실제 거래와 기업 신용으로 심사합니다.">
         <Reveal>
           <KeyValueTable rows={factoringTerms} />
         </Reveal>
       </NumberedSection>
 
       <NumberedSection
-        index={6}
+        index={7}
         title="이용 절차"
-        lead="거래처 연동과 등급 평가가 끝나 있으면 매출채권이 발행될 때마다 바로 팩토링을 신청할 수 있습니다. 연간 운영한도가 소진되면 접수가 마감되므로 연초에 준비합니다."
+        lead="한 번 심사를 통과하면 이후에는 매출채권이 생길 때마다 신청만 하면 됩니다. 신청부터 입금까지 5일 이내입니다."
       >
-        <ProcessSteps steps={factoringProcedure} columns={5} />
+        <ProcessSteps steps={factoringProcedure} columns={4} />
       </NumberedSection>
 
       <div className="py-20 md:py-24">
