@@ -1,26 +1,228 @@
 @import "tailwindcss";
+@import "../styles/pretendard.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ------------------------------------------------------------------
+   디자인 토큰 — 코발트 스튜디오
+   브랜드 블루(#4271F4)는 로고에서, 골드는 3D 오브젝트(동전·캐릭터)에서 가져왔다.
+   흰 글자를 얹는 면은 cobalt-600(#2E5AD6, 대비 5.9:1) 이상을 쓴다.
+   ------------------------------------------------------------------ */
+@theme {
+  --font-sans:
+    "Pretendard Variable", Pretendard, "Apple SD Gothic Neo", "Noto Sans KR",
+    system-ui, sans-serif;
+  --font-display:
+    var(--font-suit), "Pretendard Variable", Pretendard, "Apple SD Gothic Neo",
+    sans-serif;
+
+  --color-cobalt-50: #eef3ff;
+  --color-cobalt-100: #dce7ff;
+  --color-cobalt-200: #b9cdff;
+  --color-cobalt-300: #8fb3ff;
+  --color-cobalt-400: #5e8cff;
+  --color-cobalt-500: #4271f4;
+  --color-cobalt-600: #2e5ad6;
+  --color-cobalt-700: #1f47b8;
+  --color-cobalt-800: #15368f;
+  --color-cobalt-900: #0b1e4d;
+  --color-cobalt-950: #0b1433;
+
+  --color-gold-50: #fff8e6;
+  --color-gold-100: #fff4d6;
+  --color-gold-200: #ffe9a8;
+  --color-gold-300: #ffe08a;
+  --color-gold-400: #f5b940;
+  --color-gold-500: #e0a030;
+  --color-gold-600: #d99a2a;
+  --color-gold-700: #9a6400;
+
+  --color-brand: var(--color-cobalt-500);
+  --color-brand-strong: var(--color-cobalt-600);
+  --color-navy: var(--color-cobalt-900);
+  --color-navy-deep: var(--color-cobalt-950);
+  --color-ink: #0f172a;
+  --color-body: #475569;
+  --color-muted: #64748b;
+  --color-line: #e8eef9;
+  --color-line-strong: #dbe6ff;
+  --color-soft: #f3f7ff;
+  --color-soft-2: #f8faff;
+  --color-tint-sky: #e9f3ff;
+  --color-tint-mint: #e8f8f1;
+  --color-tint-lavender: #efebff;
+
+  --text-hero: clamp(2.5rem, 1.6rem + 3.4vw, 4.625rem);
+  --text-hero--line-height: 1.14;
+  --text-hero--letter-spacing: -0.03em;
+  --text-h1: clamp(2.25rem, 1.5rem + 2.6vw, 4rem);
+  --text-h1--line-height: 1.1;
+  --text-h1--letter-spacing: -0.03em;
+  --text-h2: clamp(1.75rem, 1.2rem + 1.9vw, 3rem);
+  --text-h2--line-height: 1.2;
+  --text-h2--letter-spacing: -0.03em;
+  --text-h3: clamp(1.375rem, 1.1rem + 1vw, 1.625rem);
+  --text-h3--line-height: 1.3;
+  --text-h3--letter-spacing: -0.02em;
+  --text-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  --text-lead--line-height: 1.7;
+  --text-stat: clamp(2.25rem, 1.6rem + 2vw, 3.25rem);
+  --text-stat--line-height: 1;
+  --text-stat--letter-spacing: -0.02em;
+
+  --shadow-card:
+    0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 32px -12px rgba(15, 23, 42, 0.14),
+    0 32px 64px -32px rgba(66, 113, 244, 0.28);
+  --shadow-card-hover:
+    0 1px 2px rgba(15, 23, 42, 0.05), 0 18px 40px -14px rgba(15, 23, 42, 0.18),
+    0 40px 72px -32px rgba(66, 113, 244, 0.35);
+  --shadow-soft:
+    0 1px 2px rgba(15, 23, 42, 0.04), 0 16px 40px -16px rgba(15, 23, 42, 0.14);
+  --shadow-float: 0 40px 80px -32px rgba(11, 30, 77, 0.55);
+  --shadow-navy: 0 30px 60px -30px rgba(4, 12, 40, 0.6);
+  --shadow-button: 0 10px 28px rgba(11, 30, 77, 0.3);
+  --shadow-button-lg: 0 16px 40px rgba(11, 30, 77, 0.35);
+
+  --radius-4xl: 1.75rem;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+
+  --container-site: 80rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: #ffffff;
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  ::selection {
+    background: var(--color-cobalt-500);
+    color: #ffffff;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-cobalt-500);
+    outline-offset: 2px;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* Lenis */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  /* 스크롤 리빌 — JS가 has-motion을 붙인 뒤에만 숨긴다(무JS 환경은 그대로 보인다) */
+  html.has-motion [data-reveal] {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+      opacity 0.9s var(--ease-out-expo),
+      transform 1s var(--ease-out-expo);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+  html.has-motion [data-reveal="fade"] {
+    transform: none;
+  }
+  html.has-motion [data-reveal="scale"] {
+    transform: translateY(20px) scale(0.97);
+  }
+  html.has-motion [data-reveal][data-inview="true"] {
+    opacity: 1;
+    transform: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html.has-motion [data-reveal] {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* 하프톤 도트 — 기존 사이트의 시각 모티프. mask-fade-*와 함께 모서리에 깐다 */
+@utility halftone {
+  background-image: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.22) 1.3px,
+    transparent 1.8px
+  );
+  background-size: 18px 18px;
+}
+@utility halftone-ink {
+  background-image: radial-gradient(
+    circle,
+    rgba(11, 30, 77, 0.14) 1.3px,
+    transparent 1.8px
+  );
+  background-size: 18px 18px;
+}
+@utility mask-fade-tl {
+  -webkit-mask-image: linear-gradient(135deg, #000, transparent 70%);
+  mask-image: linear-gradient(135deg, #000, transparent 70%);
+}
+@utility mask-fade-tr {
+  -webkit-mask-image: linear-gradient(225deg, #000, transparent 70%);
+  mask-image: linear-gradient(225deg, #000, transparent 70%);
+}
+@utility mask-fade-bl {
+  -webkit-mask-image: linear-gradient(45deg, #000, transparent 70%);
+  mask-image: linear-gradient(45deg, #000, transparent 70%);
+}
+@utility mask-fade-br {
+  -webkit-mask-image: linear-gradient(315deg, #000, transparent 70%);
+  mask-image: linear-gradient(315deg, #000, transparent 70%);
+}
+
+/* 코발트 스테이지 — 히어로·CTA·인증 파트너 카드의 바탕 */
+@utility stage-cobalt {
+  background: linear-gradient(160deg, #0b1e4d 0%, #15368f 42%, #2f5fe0 100%);
+}
+@utility stage-cobalt-bright {
+  background: linear-gradient(135deg, #2e5ad6 0%, #4271f4 60%, #5b8cff 100%);
+}
+
+/* 그라디언트 보더 — 한 계층에만, 조용하게 */
+@utility gradient-border-brand {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#ffffff, #ffffff) padding-box,
+    linear-gradient(180deg, rgba(66, 113, 244, 0.35), rgba(66, 113, 244, 0.04))
+      border-box;
+}
+@utility gradient-border-navy {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#0b1e4d, #0b1e4d) padding-box,
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.04))
+      border-box;
+}
+
+@utility keep-all {
+  word-break: keep-all;
 }
