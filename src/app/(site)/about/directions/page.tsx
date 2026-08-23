@@ -127,6 +127,13 @@ export default function DirectionsPage() {
           <Reveal className="flex">
             <Card tone="soft" padding="lg" className="w-full gap-3">
               <div className="font-display text-lg font-extrabold tracking-tight">도보</div>
+              {/* 자가용 카드에는 칩이 3개인데 여기는 한 문장뿐이라 카드 안이 비어 보였다.
+                  02의 지하철 정보를 칩으로 한 번 더 짚어 두 카드의 무게를 맞춘다 */}
+              <div className="flex flex-wrap gap-2">
+                <Chip>{transit.subway.station}</Chip>
+                <Chip>{transit.subway.exit}</Chip>
+                <Chip tone="gold">{transit.subway.walk}</Chip>
+              </div>
               <p className="text-[15px] leading-relaxed text-body">{transit.walk}</p>
             </Card>
           </Reveal>
