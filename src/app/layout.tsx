@@ -30,6 +30,8 @@ export const metadata: Metadata = {
     title: company.name,
     description: company.description,
   },
+  // 홈의 OG 이미지는 app/opengraph-image.png(파일 규칙). 서브페이지는 src/lib/metadata.ts의 pageMetadata()가 채운다
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

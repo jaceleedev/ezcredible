@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import { CTABand } from "@/components/layout/cta-band";
 import { FeatureCards } from "@/components/sub/feature-cards";
 import { FundIntro } from "@/components/sub/fund-intro";
@@ -11,12 +12,7 @@ import { NumberedCard } from "@/components/ui/numbered-card";
 import { Reveal } from "@/components/motion/reveal";
 import { b2bCautionExample, b2bCautions, b2bGuarantee, b2bPurchase as page, b2bSpecs } from "@/content/pages/policy-funds";
 
-export const metadata: Metadata = {
-  title: page.title,
-  description: page.metaDescription,
-  alternates: { canonical: page.href },
-  openGraph: { title: page.title, description: page.metaDescription, url: page.href },
-};
+export const metadata: Metadata = pageMetadata({ title: page.title, description: page.metaDescription, href: page.href });
 
 export default function B2BPurchasePage() {
   return (

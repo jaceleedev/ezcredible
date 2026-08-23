@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import { Suspense } from "react";
 import { ConsultationForm } from "@/components/support/consultation-form";
 import { SubHero } from "@/components/sub/sub-hero";
@@ -7,12 +8,7 @@ import { Pill } from "@/components/ui/pill";
 import { Reveal } from "@/components/motion/reveal";
 import { company, consultationHref } from "@/content/site";
 
-export const metadata: Metadata = {
-  title: "상담신청",
-  description: "이지크레더블 상담 신청 — 정책자금·유동성자금·성장 솔루션·기업인증에 대해 궁금한 점을 남겨 주시면 담당자가 검토 후 휴대전화로 연락드립니다. 평일 09:00 ~ 18:00.",
-  alternates: { canonical: consultationHref },
-  openGraph: { title: "상담신청", url: consultationHref },
-};
+export const metadata: Metadata = pageMetadata({ title: "상담신청", description: "이지크레더블 상담 신청 — 정책자금·유동성자금·성장 솔루션·기업인증에 대해 궁금한 점을 남겨 주시면 담당자가 검토 후 휴대전화로 연락드립니다. 평일 09:00 ~ 18:00.", href: consultationHref });
 
 const steps = [
   { title: "신청 접수", description: "아래 폼을 남겨 주시면 바로 접수됩니다." },

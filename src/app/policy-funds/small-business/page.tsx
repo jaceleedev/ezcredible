@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import { CTABand } from "@/components/layout/cta-band";
 import { DataTable } from "@/components/sub/data-table";
 import { FeatureCards } from "@/components/sub/feature-cards";
@@ -17,12 +18,7 @@ import {
   smallBusinessScale,
 } from "@/content/pages/policy-funds";
 
-export const metadata: Metadata = {
-  title: page.title,
-  description: page.metaDescription,
-  alternates: { canonical: page.href },
-  openGraph: { title: page.title, description: page.metaDescription, url: page.href },
-};
+export const metadata: Metadata = pageMetadata({ title: page.title, description: page.metaDescription, href: page.href });
 
 /** 우대금리 유형 (공고 제2025-656호 2쪽) — 동일 유형 내 중복 불가, 최대 0.8%p */
 const preferentialRates = [

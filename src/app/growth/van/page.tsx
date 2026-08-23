@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import { CTABand } from "@/components/layout/cta-band";
 import { FeatureCards } from "@/components/sub/feature-cards";
 import { FundIntro } from "@/components/sub/fund-intro";
@@ -9,12 +10,7 @@ import { NumberedCard } from "@/components/ui/numbered-card";
 import { Reveal } from "@/components/motion/reveal";
 import { van as page, vanFunctions, vanProcedure } from "@/content/pages/growth";
 
-export const metadata: Metadata = {
-  title: "VAN 서비스",
-  description: page.metaDescription,
-  alternates: { canonical: page.href },
-  openGraph: { title: "VAN 서비스", description: page.metaDescription, url: page.href },
-};
+export const metadata: Metadata = pageMetadata({ title: "VAN 서비스", description: page.metaDescription, href: page.href });
 
 export default function VANPage() {
   return (

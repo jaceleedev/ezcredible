@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import { CTABand } from "@/components/layout/cta-band";
 import { DataTable } from "@/components/sub/data-table";
 import { FeatureCards } from "@/components/sub/feature-cards";
@@ -20,12 +21,7 @@ import {
   type CreditGrade,
 } from "@/content/pages/growth";
 
-export const metadata: Metadata = {
-  title: page.title,
-  description: page.metaDescription,
-  alternates: { canonical: page.href },
-  openGraph: { title: page.title, description: page.metaDescription, url: page.href },
-};
+export const metadata: Metadata = pageMetadata({ title: page.title, description: page.metaDescription, href: page.href });
 
 /** 등급 띠별 배지 색 — 투자적격은 코발트, 투기등급은 골드, 위험은 회색 */
 const bandTone: Record<CreditGrade["band"], "brand" | "white" | "gold" | "soft"> = {

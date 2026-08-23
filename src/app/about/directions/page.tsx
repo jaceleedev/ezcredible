@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import { CTABand } from "@/components/layout/cta-band";
 import { NumberedSection } from "@/components/sub/numbered-section";
 import { SubHero } from "@/components/sub/sub-hero";
@@ -9,12 +10,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { directionsPage as page, transit } from "@/content/pages/about";
 import { company } from "@/content/site";
 
-export const metadata: Metadata = {
-  title: page.title,
-  description: page.metaDescription,
-  alternates: { canonical: page.href },
-  openGraph: { title: page.title, description: page.metaDescription, url: page.href },
-};
+export const metadata: Metadata = pageMetadata({ title: page.title, description: page.metaDescription, href: page.href });
 
 const query = encodeURIComponent(page.mapQuery);
 const naverMapUrl = `https://map.naver.com/p/search/${query}`;

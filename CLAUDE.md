@@ -16,11 +16,18 @@ www.ezcredible.com(한국 B2B 기업금융 컨설팅: 정책자금 · 유동성�
 
 ## 현재 상태 (2026-08-23 기준)
 
-완료: 디자인 시스템(`/design-system` 쇼케이스 라우트, noindex) · 홈(`/`) · **서브페이지 17/17**(정책자금 4 · 유동성 3 · 성장 4 · 회사소개 4 · 고객지원 2) · 상담 신청 폼 + `/api/consultations` — 2026 수치 반영, 4폭 검증, 빌드 통과
+완료: 디자인 시스템(`/design-system` 쇼케이스 라우트, noindex) · 홈(`/`) · **서브페이지 17/17** · 상담 신청 폼 + `/api/consultations` · **404 · sitemap · robots · OG 이미지 · 렌탈 리다이렉트** — 2026 수치 반영, 4폭 검증, 빌드 통과
 다음 순서:
-1. 404 페이지, `sitemap.ts`/`robots.ts`, 페이지별 OG 이미지
-2. 코덱스 이미지 교체(아래 리스트), 배포
+1. 코덱스 이미지 교체(아래 리스트) → `public/images/temp/` 삭제 → `/design-system/og`에서 OG 이미지 재캡처
+2. 배포(호스팅 결정 → 개인정보처리방침 제6조 위탁 현황 채우기, `privacyMeta.revised`를 배포일로)
 3. **맨 마지막**: 상담 신청 **전송 방식 확정**(이메일/시트/슬랙) — `src/lib/deliver-consultation.ts` 한 곳만 바꾼다. 지금은 `CONSULTATION_WEBHOOK_URL`(`.env.example`)이 있으면 JSON POST, 없으면 dev는 콘솔 로그·prod는 503 "준비 중"
+
+### SEO · 메타 (2026-08-23)
+
+- `src/app/sitemap.ts`(홈 + nav 17개, `/design-system`·`/api` 제외) · `src/app/robots.ts`(design-system·api 차단) · `next.config.ts` 리다이렉트 `/rental/:path*` → `/` (308, 기존 사이트에서 제거된 렌탈 솔루션)
+- OG 이미지: `src/app/opengraph-image.png`(1200×630) + `.alt.txt`. 원본은 `/design-system/og` 페이지 — 1200×630 뷰포트로 `#og-card`를 캡처(Next 개발 배지 `nextjs-portal`은 지운 뒤). 임시 3D 이미지가 들어 있으니 코덱스 교체 후 재캡처
+- **페이지 메타는 반드시 `pageMetadata()`(`src/lib/metadata.ts`)로** — Next는 `openGraph` 같은 중첩 객체를 세그먼트 간 병합하지 않아서, 페이지가 `openGraph`를 직접 쓰면 루트의 siteName·locale·OG 이미지가 사라진다(실제로 그랬다). 홈만 루트 layout 메타 + 파일 규칙 이미지
+- 404: `src/app/not-found.tsx` — 코발트 스테이지 + 전체 메뉴. 프로덕션에서 404 상태 코드 확인
 
 ### 고객지원 2페이지 (2026-08-23)
 

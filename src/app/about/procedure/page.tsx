@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import { CTABand } from "@/components/layout/cta-band";
 import { FeatureCards } from "@/components/sub/feature-cards";
 import { NumberedSection } from "@/components/sub/numbered-section";
@@ -10,12 +11,7 @@ import { NumberedCard } from "@/components/ui/numbered-card";
 import { Reveal } from "@/components/motion/reveal";
 import { procedureDocuments, procedurePage as page, procedurePrinciples, procedureSteps } from "@/content/pages/about";
 
-export const metadata: Metadata = {
-  title: page.title,
-  description: page.metaDescription,
-  alternates: { canonical: page.href },
-  openGraph: { title: page.title, description: page.metaDescription, url: page.href },
-};
+export const metadata: Metadata = pageMetadata({ title: page.title, description: page.metaDescription, href: page.href });
 
 export default function ProcedurePage() {
   return (

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import { DevLabel } from "@/components/home/dev-label";
 import { DataTable } from "@/components/sub/data-table";
 import { SubHero } from "@/components/sub/sub-hero";
@@ -9,12 +10,7 @@ import { Pill } from "@/components/ui/pill";
 import { privacyIntro, privacyMeta as page, privacySections, type PolicyBlock } from "@/content/pages/privacy";
 import { company, privacyOfficer } from "@/content/site";
 
-export const metadata: Metadata = {
-  title: page.title,
-  description: page.metaDescription,
-  alternates: { canonical: page.href },
-  openGraph: { title: page.title, description: page.metaDescription, url: page.href },
-};
+export const metadata: Metadata = pageMetadata({ title: page.title, description: page.metaDescription, href: page.href });
 
 function Block({ block }: { block: PolicyBlock }) {
   switch (block.type) {

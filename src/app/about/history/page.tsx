@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import { CTABand } from "@/components/layout/cta-band";
 import { DevLabel } from "@/components/home/dev-label";
 import { FactStrip } from "@/components/sub/fact-strip";
@@ -9,12 +10,7 @@ import { Container } from "@/components/ui/container";
 import { ImageStage } from "@/components/ui/image-stage";
 import { history, historyPage as page } from "@/content/pages/about";
 
-export const metadata: Metadata = {
-  title: page.title,
-  description: page.metaDescription,
-  alternates: { canonical: page.href },
-  openGraph: { title: page.title, description: page.metaDescription, url: page.href },
-};
+export const metadata: Metadata = pageMetadata({ title: page.title, description: page.metaDescription, href: page.href });
 
 /** 설립 건을 뺀 협약·위탁 파트너 수 */
 const partnerCount = history.filter((entry) => !entry.partner.includes("설립")).length;

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import Link from "next/link";
 import { CTABand } from "@/components/layout/cta-band";
 import { PartnerLogos } from "@/components/home/partners";
@@ -18,12 +19,7 @@ import { solutions, stats } from "@/content/home";
 import { companyPage as page, companyValues } from "@/content/pages/about";
 import { company } from "@/content/site";
 
-export const metadata: Metadata = {
-  title: page.title,
-  description: page.metaDescription,
-  alternates: { canonical: page.href },
-  openGraph: { title: page.title, description: page.metaDescription, url: page.href },
-};
+export const metadata: Metadata = pageMetadata({ title: page.title, description: page.metaDescription, href: page.href });
 
 export default function CompanyPage() {
   return (

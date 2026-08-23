@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import Image from "next/image";
 import { CTABand } from "@/components/layout/cta-band";
 import { FeatureCards } from "@/components/sub/feature-cards";
@@ -21,12 +22,7 @@ import {
   certificationTargets,
 } from "@/content/pages/growth";
 
-export const metadata: Metadata = {
-  title: page.title,
-  description: page.metaDescription,
-  alternates: { canonical: page.href },
-  openGraph: { title: page.title, description: page.metaDescription, url: page.href },
-};
+export const metadata: Metadata = pageMetadata({ title: page.title, description: page.metaDescription, href: page.href });
 
 export default function CertificationPage() {
   return (

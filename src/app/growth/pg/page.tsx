@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import { CTABand } from "@/components/layout/cta-band";
 import { DataTable, type Cell } from "@/components/sub/data-table";
 import { FeatureCards } from "@/components/sub/feature-cards";
@@ -9,12 +10,7 @@ import { SubHero } from "@/components/sub/sub-hero";
 import { Reveal } from "@/components/motion/reveal";
 import { pg as page, pgFlow, pgSettlement } from "@/content/pages/growth";
 
-export const metadata: Metadata = {
-  title: "PG 서비스",
-  description: page.metaDescription,
-  alternates: { canonical: page.href },
-  openGraph: { title: "PG 서비스", description: page.metaDescription, url: page.href },
-};
+export const metadata: Metadata = pageMetadata({ title: "PG 서비스", description: page.metaDescription, href: page.href });
 
 /** 같은 정산주기(2회/월·4회/월)는 첫 행에서 세로 병합 */
 const settlementRows: Cell[][] = pgSettlement.rows.map((row, i, all) => {

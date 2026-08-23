@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import { CTABand } from "@/components/layout/cta-band";
 import { DataTable } from "@/components/sub/data-table";
 import { FeatureCards } from "@/components/sub/feature-cards";
@@ -11,12 +12,7 @@ import { KeyValueTable } from "@/components/ui/key-value-table";
 import { Reveal } from "@/components/motion/reveal";
 import { facility as page, facilityDetails, kosmes, kosmesFunds } from "@/content/pages/policy-funds";
 
-export const metadata: Metadata = {
-  title: page.title,
-  description: page.metaDescription,
-  alternates: { canonical: page.href },
-  openGraph: { title: page.title, description: page.metaDescription, url: page.href },
-};
+export const metadata: Metadata = pageMetadata({ title: page.title, description: page.metaDescription, href: page.href });
 
 /** 시설자금을 지원하는 자금만 표로 — 운전자금 전용(긴급경영안정·밸류체인)은 제외 */
 const facilityFunds = kosmesFunds.filter((fund) => fund.facility !== null);
