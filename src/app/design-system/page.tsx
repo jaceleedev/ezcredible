@@ -23,6 +23,7 @@ import { FactStrip } from "@/components/sub/fact-strip";
 import { FeatureCards } from "@/components/sub/feature-cards";
 import { SectionNumber } from "@/components/sub/numbered-section";
 import { ProcessSteps } from "@/components/sub/process-steps";
+import { Timeline } from "@/components/sub/timeline";
 import { Reveal } from "@/components/motion/reveal";
 
 export const metadata: Metadata = {
@@ -316,7 +317,7 @@ export default function DesignSystemPage() {
           </div>
         </Demo>
 
-        <Demo id="sub" title="서브페이지 블록" note="src/components/sub — 배너(SubHero)·번호 섹션(NumberedSection) 아래에 조립하는 본문 부품. 같은 스타일로 페이지마다 다른 본문을 만든다. 조합 예: /policy-funds/operating(기본형), /policy-funds/small-business(표 중심), /policy-funds/b2b-purchase(스펙·주의사항).">
+        <Demo id="sub" title="서브페이지 블록" note="src/components/sub — 배너(SubHero)·번호 섹션(NumberedSection) 아래에 조립하는 본문 부품. 같은 스타일로 페이지마다 다른 본문을 만든다. 조합 예: /policy-funds/operating(기본형), /policy-funds/small-business(표 중심), /policy-funds/b2b-purchase(스펙·주의사항), /about/history(타임라인), /about/directions(지도).">
           <div className="flex flex-col gap-3">
             <SectionNumber index={2} />
             <h2 className="text-h2">번호 섹션 헤더</h2>
@@ -355,6 +356,13 @@ export default function DesignSystemPage() {
           <Callout tone="gold">
             <strong>골드 콜아웃</strong> — 융자제한·거래 주의사항처럼 “조심할 것”에 쓴다. 정의 콜아웃(brand)과 역할을 나눈다.
           </Callout>
+          <Timeline
+            entries={[
+              { date: "2023.01", year: "2023", title: "KSNET(케이에스넷)", description: "VAN 영업대리점" },
+              { date: "2022.10", year: "2022", title: "웰페이", description: "매출채권팩토링 서비스 계약" },
+              { date: "2019.07", year: "2019", title: "이지크레더블 설립" },
+            ]}
+          />
         </Demo>
 
         <Demo id="tones" title="섹션 톤" note="페이지는 white → soft → navy/cobalt 를 번갈아 쌓는다. halftone 옵션이 모서리 도트를 깐다.">

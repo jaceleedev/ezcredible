@@ -35,7 +35,7 @@ export function Stat({ label, value, unit, prefix, plain = false, tone = "dark",
           {prefix}
           {typeof value === "number" ? <Counter value={value} plain={plain} /> : value}
         </span>
-        {unit && <span className={cn("text-base font-bold", compact && "whitespace-nowrap", dark ? "text-gold-400" : "text-brand-strong")}>{unit}</span>}
+        {unit && <span className={cn("text-base font-bold", !compact && "whitespace-nowrap", dark ? "text-gold-400" : "text-brand-strong")}>{unit}</span>}
       </div>
     </div>
   );

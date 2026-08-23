@@ -24,13 +24,22 @@ function LogoRow({ title, description, logos, columns }: { title: string; descri
   );
 }
 
-/** 지원기관·업무위탁 — 실제 기관 로고 그대로 */
+/** 로고 두 줄만 — 회사소개 페이지처럼 다른 섹션 안에 넣을 때 */
+export function PartnerLogos({ className }: { className?: string }) {
+  return (
+    <div className={className ?? "flex flex-col gap-14"}>
+      <LogoRow title="지원기관" description="정책자금을 지원하는 기관들입니다." logos={supportInstitutions} columns={3} />
+      <LogoRow title="업무위탁" description="이지크레더블이 업무를 위탁받은 회사들입니다." logos={clients} columns={4} />
+    </div>
+  );
+}
+
+/** 지원기관·업무위탁 — 실제 기관 로고 그대로 (홈 섹션) */
 export function Partners() {
   return (
     <Section compact>
-      <Container className="flex flex-col gap-14">
-        <LogoRow title="지원기관" description="정책자금을 지원하는 기관들입니다." logos={supportInstitutions} columns={3} />
-        <LogoRow title="업무위탁" description="이지크레더블이 업무를 위탁받은 회사들입니다." logos={clients} columns={4} />
+      <Container>
+        <PartnerLogos />
       </Container>
     </Section>
   );
