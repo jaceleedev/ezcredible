@@ -39,8 +39,24 @@ export default function OperatingFundsPage() {
                 className="w-full"
                 description={
                   <>
-                    <span className="block font-semibold text-body">{fund.target}</span>
-                    <span className="mt-1.5 block">{fund.working}</span>
+                    <div className="font-semibold text-body">{fund.target}</div>
+                    {(fund.working.limit || fund.working.rate) && (
+                      <dl className="mt-3.5 flex flex-col gap-1.5 border-t border-line pt-3.5">
+                        {fund.working.limit && (
+                          <div className="flex gap-2.5">
+                            <dt className="w-8 shrink-0 font-bold text-cobalt-700">한도</dt>
+                            <dd className="text-body">{fund.working.limit}</dd>
+                          </div>
+                        )}
+                        {fund.working.rate && (
+                          <div className="flex gap-2.5">
+                            <dt className="w-8 shrink-0 font-bold text-cobalt-700">금리</dt>
+                            <dd className="text-body">{fund.working.rate}</dd>
+                          </div>
+                        )}
+                      </dl>
+                    )}
+                    {fund.working.note && <div className="mt-3 text-[13px] leading-relaxed">{fund.working.note}</div>}
                   </>
                 }
               />
