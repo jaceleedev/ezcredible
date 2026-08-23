@@ -14,24 +14,34 @@ www.ezcredible.com(한국 B2B 기업금융 컨설팅: 정책자금 · 유동성�
 - 보고 전 검사: `pnpm exec tsc --noEmit` → `pnpm lint` → `pnpm build`, 그리고 브라우저에서 **1200 / 1440 / 1920 / 390** 폭 확인
   (1200에서만 보고 넘겼다가 넓은 화면에서 히어로가 어긋난 적이 있다)
 
-## 현재 상태 (2026-08-23 기준)
+## 현재 상태 (2026-08-24 기준) — 사이트 골격·콘텐츠·이미지 전부 완료, 배포 전 단계
 
-완료: 디자인 시스템(`/design-system` 쇼케이스 라우트, noindex) · 홈(`/`) · **서브페이지 17/17** · 상담 신청 폼 + `/api/consultations` · **404 · sitemap · robots · OG 이미지 · 렌탈 리다이렉트** — 2026 수치 반영, 4폭 검증, 빌드 통과
-다음 순서:
-1. 코덱스 이미지 교체(아래 리스트) → `public/images/temp/` 삭제 → `/design-system/og`에서 OG 이미지 재캡처
-2. 배포(호스팅 결정 → 개인정보처리방침 제6조 위탁 현황 채우기, `privacyMeta.revised`를 배포일로)
-3. **맨 마지막**: 상담 신청 **전송 방식 확정**(이메일/시트/슬랙) — `src/lib/deliver-consultation.ts` 한 곳만 바꾼다. 지금은 `CONSULTATION_WEBHOOK_URL`(`.env.example`)이 있으면 JSON POST, 없으면 dev는 콘솔 로그·prod는 503 "준비 중"
+완료: 디자인 시스템(`/design-system`, noindex) · 홈 · **서브페이지 17/17** · 상담 신청 폼 + `/api/consultations` · 404 · sitemap · robots · OG 이미지 · 렌탈 리다이렉트 · **코덱스 3D 이미지 21장 교체 완료**(`675037b`, 2026-08-24 검수: 규격·용량 정상, temp 폴더·DevLabel·SVG 화살표 제거됨, tsc/lint/build 통과, 1440/1920/390 확인)
+마지막 커밋 `675037b`(코덱스 이미지 + 가이드), `origin/main`과 동기화. 작업 트리 깨끗함.
+
+### 다음 세션 가이드 — 순서대로
+
+1. **배포 준비(호스팅 결정 후)**. 결정되면 같은 세션에서:
+   - `src/content/pages/privacy.ts` 제6조 `note` 블록을 실제 수탁자(호스팅 사업자, 상담 전송 서비스)와 위탁 업무로 교체하고 `privacyMeta.revised`를 배포일로
+   - `.env`에 `CONSULTATION_WEBHOOK_URL`(있다면) 설정, 도메인 연결, `https://www.ezcredible.com/sitemap.xml`·`robots.txt`·OG 태그를 실제 도메인에서 확인, 검색엔진(네이버 서치어드바이저·구글 서치콘솔)에 sitemap 제출
+   - 기존 사이트 URL이 전부 동일하므로 리다이렉트는 `/rental/*` 하나뿐. 배포 직후 기존 유입 URL 17개가 200인지 확인
+2. **상담 전송 방식 확정 — 맨 마지막**(Jace 결정: 이메일/시트/슬랙). `src/lib/deliver-consultation.ts` 한 곳만 바꾼다. 지금은 `CONSULTATION_WEBHOOK_URL`이 있으면 JSON POST, 없으면 dev는 서버 콘솔 로그 + 성공, prod는 503 "준비 중"
+3. **클라이언트 데이터 반영**(받는 대로): 보호책임자 이메일(`site.ts` `privacyOfficer.email` — 전화는 채워짐), 2024~2026 성공사례(`src/content/cases.ts`)·수치(`src/content/home.ts` `stats`)·연혁(`src/content/pages/about.ts` `history`, 2023.1 이후 공백에 DevLabel), 의료/어음/PG/VAN 상품 수치·B2B 취급은행(`TODO(client)` 주석 검색), 고해상도 기관 로고(`public/images/partners/`)
+4. **배포 전 QA 한 바퀴**: 4폭(1200/1440/1920/390) 전 페이지 스크린샷, Safari/모바일 Safari에서 폰트·sticky 표 확인, `prefers-reduced-motion`, 키보드로 폼 제출, Lighthouse(이미지 LCP — 히어로 PNG 132KB·priority 적용됨)
+5. 미결 답 받기(아래 "미결" 절) — 업무위탁 로고 스트립(홈+회사소개에 들어가 있음), factoring 서브도메인, 기준금리 분기 갱신 담당(`QUARTERLY` 주석 3곳: 소진공 기준금리, 기보 할인율)
+
+검수 시 확인한 코덱스 변경(참고): 히어로 `width/height` 1600×1000, `arrow-3d.svg` → `.png`, 서비스 카드 `self-stretch`, CTA 리드 모바일 `max-w`, 푸터 로고 `self-start`, `SubHero` 배너 모바일 `object-[85%_center]`(오른쪽 오브젝트가 보이도록), 자금 페이지 11개 01 스테이지는 그룹 카드 이미지 재사용, 회사소개 3페이지 01 스테이지도 솔루션 이미지 재사용, `/design-system/og` 재캡처. `privacyOfficer.phone`이 채워져 있다(Jace 확인값) — 이메일은 아직 빈 값.
 
 ### SEO · 메타 (2026-08-23)
 
 - `src/app/sitemap.ts`(홈 + nav 17개, `/design-system`·`/api` 제외) · `src/app/robots.ts`(design-system·api 차단) · `next.config.ts` 리다이렉트 `/rental/:path*` → `/` (308, 기존 사이트에서 제거된 렌탈 솔루션)
-- OG 이미지: `src/app/opengraph-image.png`(1200×630) + `.alt.txt`. 원본은 `/design-system/og` 페이지 — 1200×630 뷰포트로 `#og-card`를 캡처(Next 개발 배지 `nextjs-portal`은 지운 뒤). 임시 3D 이미지가 들어 있으니 코덱스 교체 후 재캡처
+- OG 이미지: `src/app/opengraph-image.png`(1200×630) + `.alt.txt`. 원본은 `/design-system/og` 페이지 — 1200×630 뷰포트로 `#og-card`를 캡처(Next 개발 배지 `nextjs-portal`은 지운 뒤). 코덱스 히어로 이미지로 재캡처 완료(2026-08-24)
 - **페이지 메타는 반드시 `pageMetadata()`(`src/lib/metadata.ts`)로** — Next는 `openGraph` 같은 중첩 객체를 세그먼트 간 병합하지 않아서, 페이지가 `openGraph`를 직접 쓰면 루트의 siteName·locale·OG 이미지가 사라진다(실제로 그랬다). 홈만 루트 layout 메타 + 파일 규칙 이미지
 - 404: `src/app/not-found.tsx` — 코발트 스테이지 + 전체 메뉴. 프로덕션에서 404 상태 코드 확인
 
 ### 고객지원 2페이지 (2026-08-23)
 
-- 개인정보처리방침(`src/content/pages/privacy.ts`, 13조): 기존 2023-08-31 본문을 개인정보 보호법 제30조 체계로 손봤다 — 정보통신망법 삭제, 수집 항목에 직책·희망 솔루션·(선택) 문의 내용, 보유기간 3년으로 통일, 제3자 제공·처리 위탁 조항 분리, 접속기록 1년, 구제기관 갱신, 면책 문구 삭제. **보호책임자 = 대표 이주환**, 연락처는 `site.ts` `privacyOfficer`에 `TODO(client)`(비어 있으면 표시 안 함 + DevLabel). 제6조 위탁 현황은 배포(호스팅·전송 서비스) 시 채울 것. 개정일 `privacyMeta.revised`는 배포일로
+- 개인정보처리방침(`src/content/pages/privacy.ts`, 13조): 기존 2023-08-31 본문을 개인정보 보호법 제30조 체계로 손봤다 — 정보통신망법 삭제, 수집 항목에 직책·희망 솔루션·(선택) 문의 내용, 보유기간 3년으로 통일, 제3자 제공·처리 위탁 조항 분리, 접속기록 1년, 구제기관 갱신, 면책 문구 삭제. **보호책임자 = 대표 이주환**, 연락처는 `site.ts` `privacyOfficer`(전화 채워짐, 이메일은 빈 값 — 비어 있으면 표시 안 함 + DevLabel). 제6조 위탁 현황은 배포(호스팅·전송 서비스) 시 채울 것. 개정일 `privacyMeta.revised`는 배포일로
 - 상담신청: 기존 필드(희망 솔루션·이름·직책·연락처·회사명·사업자등록번호·동의) + 선택 문의 내용. 검증은 `src/lib/consultation.ts`(클라이언트·서버 공용 — 전화 형식, 사업자번호 체크섬), 동의 박스에 수집 항목·목적·보유기간 요약(`consentSummary`, 방침과 같은 값). API는 허니팟 + IP당 10분 5건 제한. `?topic=policy-funds|liquidity-funds|growth|certification`로 희망 솔루션 미리 선택 — `SubHero`의 빠른 상담신청이 그룹에 맞게 붙인다
 
 
@@ -107,7 +117,7 @@ www.ezcredible.com(한국 B2B 기업금융 컨설팅: 정책자금 · 유동성�
 - 업무절차: 6단계 `ProcessSteps columns={3}` + 원칙 카드 3 + 준비 서류 4. 수수료·비용 같은 확인 안 된 주장은 넣지 않았다
 - 오시는길: 구글 지도 임베드(키 없음, `output=embed`) + 네이버/카카오 지도 검색 링크 버튼, 지하철·버스·정류장 카드, 도보·주차(30분 무료, 이후 30분당 1,000원)
 
-## 코덱스 이미지 리스트 — Jace가 일괄 생성 예정
+## 코덱스 이미지 리스트 — 완료(2026-08-24). 재생성·추가 시 참고
 
 **코덱스에게 줄 실행 가이드는 `docs/codex-image-guide.md`** (슬롯별 영문 프롬프트 · 규격 · 파일 경로 · 코드 연결 지점 · 검증 · 보고 형식). 아래 표는 요약이며 규격이 다르면 가이드가 우선. 공통 프롬프트 접두어: **soft 3D render, 코발트 블루(#4271F4)·네이비·웜 골드 팔레트, 매트+살짝 광택, 스튜디오 조명(왼쪽 위), 배경 투명 PNG, 그림자 부드럽게, 텍스트 없음**
 
@@ -124,7 +134,7 @@ www.ezcredible.com(한국 B2B 기업금융 컨설팅: 정책자금 · 유동성�
 | 9 | 서브페이지 배너 8종 2000×600 | 각 솔루션 상징 오브젝트를 네이비 배경에 어둡게 | 운전/구매/시설/소상공인/팩토링/의료/어음/인증 |
 | 10 | 그룹 배너 3종 2000×600 (Jace 승인 2026-08-23) | 성장: 상승 그래프+신용등급 배지 / 회사소개: 빌딩+악수하는 캐릭터 / 고객지원: 헤드셋 캐릭터+말풍선 | 기업신용평가·PG·VAN(성장), 회사소개·연혁·업무절차·오시는길, 상담신청·개인정보처리방침 |
 
-교체 후 `public/images/temp/`는 삭제하고 `/design-system/og`에서 OG 이미지 재캡처. 자금 페이지 11개의 01 스테이지(`FundPage.image`)는 새로 그리지 않고 그룹 카드 이미지를 재사용한다(가이드 4-8). 기관 로고 10개는 기존 사이트의 200px PNG라 고해상도/SVG를 클라이언트에게 요청해야 한다.
+21장 모두 `public/images/`에 들어가 있고 temp 폴더는 삭제됐다. 이미지를 바꾸면 `/design-system/og`에서 OG 이미지를 재캡처할 것. 자금 페이지 11개·회사소개 3페이지의 01 스테이지(`FundPage.image` / `ImageStage src`)는 그룹 카드 이미지를 재사용 중 — 페이지별 전용 오브젝트가 필요해지면 가이드 2절 형식으로 추가 생성. 기관 로고 10개는 기존 사이트의 200px PNG라 고해상도/SVG를 클라이언트에게 요청해야 한다.
 
 ## 일하는 방식 (Jace 피드백)
 
@@ -135,6 +145,8 @@ www.ezcredible.com(한국 B2B 기업금융 컨설팅: 정책자금 · 유동성�
 
 ## 미결 (Jace에게 물어볼 것)
 
-- 홈의 지원기관·업무위탁 로고 스트립 유지 여부(현재 넣어둠, 답변 없음)
-- factoring.ezcredible.com(별도 골드 톤 랜딩) 유지/흡수
-- 2024~2026 성공사례·수치·연혁 데이터, 고해상도 기관 로고
+- 지원기관·업무위탁 로고 스트립 유지 여부(홈 `Partners` + 회사소개 04 `PartnerLogos`에 넣어둠, 답변 없음)
+- factoring.ezcredible.com(별도 골드 톤 랜딩) 유지/흡수 — 팩토링 페이지(`/liquidity-funds/receivables-factoring`)가 기보 기준으로 완성돼 있어 흡수도 가능
+- 호스팅·배포처, 상담 전송 방식(이메일/시트/슬랙)
+- 클라이언트 데이터: 2024~2026 성공사례·수치·연혁, 보호책임자 이메일, 의료/어음/PG/VAN 상품 수치·B2B 취급은행 확인, 고해상도 기관 로고
+- 분기마다 갱신할 값(`QUARTERLY` 주석): 소진공 정책자금 기준금리(2026 3분기 3.85%), 기보 팩토링 기준 할인율(2026-04-01 1.50~4.20%) — 누가 언제 갱신할지
