@@ -12,20 +12,30 @@ type StatProps = {
   /** 연도처럼 천 단위 콤마를 찍지 않는 숫자 */
   plain?: boolean;
   tone?: "light" | "dark";
+  /** 서브페이지 수치 칸용 — 모바일에서 숫자를 줄이고 단위가 다음 줄로 내려갈 수 있다 */
+  compact?: boolean;
   className?: string;
 };
 
-export function Stat({ label, value, unit, prefix, plain = false, tone = "dark", className }: StatProps) {
+export function Stat({ label, value, unit, prefix, plain = false, tone = "dark", compact = false, className }: StatProps) {
   const dark = tone === "dark";
+  // "3조 3,620억"처럼 긴 문자열은 compact에서 한 단계 작게 — 4열 칸(≈264px)에 맞춘다
+  const long = typeof value === "string" && value.length > 6;
   return (
     <div className={cn("flex flex-col gap-3", className)}>
       <div className={cn("text-[13px] font-semibold", dark ? "text-cobalt-300" : "text-muted")}>{label}</div>
-      <div className="flex items-baseline gap-1 whitespace-nowrap">
-        <span className={cn("font-display text-stat font-extrabold tabular-nums", dark ? "text-white" : "text-ink")}>
+      <div className={cn("flex items-baseline gap-x-1", compact ? "flex-wrap" : "whitespace-nowrap")}>
+        <span
+          className={cn(
+            "font-display font-extrabold whitespace-nowrap tabular-nums",
+            compact ? (long ? "text-[1.75rem] leading-none tracking-[-0.02em] sm:text-[2.4rem]" : "text-[1.75rem] leading-none tracking-[-0.02em] sm:text-stat") : "text-stat",
+            dark ? "text-white" : "text-ink",
+          )}
+        >
           {prefix}
           {typeof value === "number" ? <Counter value={value} plain={plain} /> : value}
         </span>
-        {unit && <span className={cn("text-base font-bold", dark ? "text-gold-400" : "text-brand-strong")}>{unit}</span>}
+        {unit && <span className={cn("text-base font-bold", compact && "whitespace-nowrap", dark ? "text-gold-400" : "text-brand-strong")}>{unit}</span>}
       </div>
     </div>
   );

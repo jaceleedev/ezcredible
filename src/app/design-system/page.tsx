@@ -18,6 +18,11 @@ import { Logo } from "@/components/ui/logo";
 import { Halftone } from "@/components/ui/halftone";
 import { ArrowRight, ArrowUpRight, Award, Chart, Check, Cycle, Doc, ListCheck, Star, Trend } from "@/components/ui/icons";
 import { CTABand } from "@/components/layout/cta-band";
+import { DataTable } from "@/components/sub/data-table";
+import { FactStrip } from "@/components/sub/fact-strip";
+import { FeatureCards } from "@/components/sub/feature-cards";
+import { SectionNumber } from "@/components/sub/numbered-section";
+import { ProcessSteps } from "@/components/sub/process-steps";
 import { Reveal } from "@/components/motion/reveal";
 
 export const metadata: Metadata = {
@@ -71,7 +76,7 @@ const gold = [["50", "#fff8e6"], ["100", "#fff4d6"], ["200", "#ffe9a8"], ["300",
 
 const toc = [
   ["colors", "컬러"], ["type", "타이포"], ["headers", "섹션 헤더"], ["buttons", "버튼"], ["pills", "필 · 칩"], ["cards", "카드"], ["stages", "이미지 스테이지"],
-  ["stats", "스탯"], ["content", "표 · 콜아웃 · 번호 카드"], ["nav", "내비 요소"], ["tones", "섹션 톤"], ["cta", "CTA 밴드"], ["logo", "로고"], ["motion", "모션"],
+  ["stats", "스탯"], ["content", "표 · 콜아웃 · 번호 카드"], ["nav", "내비 요소"], ["sub", "서브페이지 블록"], ["tones", "섹션 톤"], ["cta", "CTA 밴드"], ["logo", "로고"], ["motion", "모션"],
 ];
 
 export default function DesignSystemPage() {
@@ -311,6 +316,47 @@ export default function DesignSystemPage() {
           </div>
         </Demo>
 
+        <Demo id="sub" title="서브페이지 블록" note="src/components/sub — 배너(SubHero)·번호 섹션(NumberedSection) 아래에 조립하는 본문 부품. 같은 스타일로 페이지마다 다른 본문을 만든다. 조합 예: /policy-funds/operating(기본형), /policy-funds/small-business(표 중심), /policy-funds/b2b-purchase(스펙·주의사항).">
+          <div className="flex flex-col gap-3">
+            <SectionNumber index={2} />
+            <h2 className="text-h2">번호 섹션 헤더</h2>
+          </div>
+          <FactStrip
+            facts={[
+              { label: "2026년 융자 규모", value: "4조 643억", unit: "원" },
+              { label: "운전자금 연간 한도", value: 5, unit: "억 원 이내" },
+              { label: "대출기간", value: 5, unit: "년 이내 · 거치 2년" },
+              { label: "기업당 총 한도", value: "60억", unit: "원" },
+            ]}
+          />
+          <FeatureCards
+            items={[
+              { icon: "trend", title: "장점", body: "시중은행보다 낮은 금리로 금융비용이 줄고 경쟁력이 올라갑니다." },
+              { icon: "list", title: "특징", body: ["기업 신용등급에 따라 한도 적용", "단기 대출 및 장기 대출 상환 가능"] },
+              { icon: "star", tone: "navy", title: "솔루션", body: "이지크레더블은 모든 정책자금을 연구·분석하여 가장 합리적인 자금을 설계합니다." },
+            ]}
+          />
+          <DataTable
+            columns={["자금", "지원대상", "대출한도", "대출금리"]}
+            rows={[
+              [{ content: "경영안정", rowSpan: 2 }, "업력 무관 소상공인", "연간 7천만 원", "기준금리 +0.6%p"],
+              [null, "재해확인증 발급 소상공인", "1억 원", "연 2.0% 고정"],
+              ["성장기반", "제조업 소공인", "운전 1억 · 시설 5억 원", "기준금리 +0.6%p"],
+            ]}
+            note="첫 열은 가로 스크롤 중에도 고정(sticky). rowSpan 병합은 셀을 객체로, 병합된 자리는 null."
+          />
+          <ProcessSteps
+            steps={[
+              { tag: "1단계", title: "융자 신청·접수", description: "정책자금 내비게이션 → 정책우선도 평가 → 신청서 작성" },
+              { tag: "2단계", title: "융자대상 결정", description: "기업평가(기술성·사업성·성장성)" },
+              { tag: "3단계", title: "대출 및 사후관리", description: "약정 체결, 대출 실행, 사용 현황 모니터링" },
+            ]}
+          />
+          <Callout tone="gold">
+            <strong>골드 콜아웃</strong> — 융자제한·거래 주의사항처럼 “조심할 것”에 쓴다. 정의 콜아웃(brand)과 역할을 나눈다.
+          </Callout>
+        </Demo>
+
         <Demo id="tones" title="섹션 톤" note="페이지는 white → soft → navy/cobalt 를 번갈아 쌓는다. halftone 옵션이 모서리 도트를 깐다.">
           <div className="grid gap-4 md:grid-cols-2">
             {(["white", "soft", "navy", "cobalt", "ink"] as const).map((tone) => (
@@ -337,7 +383,7 @@ export default function DesignSystemPage() {
       </div>
 
       <Container className="pb-32">
-        <Demo id="motion" title="모션" note="Lenis 스무스 스크롤(lerp 0.08) + GSAP ScrollTrigger. Reveal은 IntersectionObserver로 data-inview를 켜고 CSS가 전환을 맡는다. prefers-reduced-motion이면 전부 꺼진다.">
+        <Demo id="motion" title="모션" note="스크롤 라이브러리 없음(브라우저 기본 스크롤). Reveal은 IntersectionObserver로 data-inview를 켜고 CSS가 전환을 맡는다. 카운터·플로팅·줄 리빌도 요소 단위이며 prefers-reduced-motion이면 전부 꺼진다.">
           <div className="grid gap-4 md:grid-cols-3">
             <Reveal className="rounded-3xl border border-line p-7"><div className="text-sm font-bold text-brand-strong">variant=&quot;up&quot;</div><p className="mt-2 text-sm text-muted">아래에서 28px 올라오며 나타남 (기본)</p></Reveal>
             <Reveal variant="fade" delay={120} className="rounded-3xl border border-line p-7"><div className="text-sm font-bold text-brand-strong">variant=&quot;fade&quot; · delay 120</div><p className="mt-2 text-sm text-muted">제자리에서 페이드</p></Reveal>

@@ -15,7 +15,7 @@ const organizationJsonLd = {
   name: company.name,
   alternateName: company.nameEn,
   url: company.url,
-  logo: `${company.url}/brand/logo-lockup.svg`,
+  logo: `${company.url}/brand/ezcredible-logo.svg`,
   description: company.description,
   address: {
     "@type": "PostalAddress",

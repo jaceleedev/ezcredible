@@ -12,7 +12,7 @@ type ImageStageProps = {
   art?: StageArtKind;
   /** 자리표시 라벨. 빈 문자열이면 숨김 */
   label?: string;
-  aspect?: "wide" | "video" | "square";
+  aspect?: "wide" | "video" | "photo" | "square";
   /** 이미지가 화면 폭에서 차지하는 비율 힌트 (next/image sizes) */
   sizes?: string;
   priority?: boolean;
@@ -28,7 +28,8 @@ const tints = {
   navy: "stage-cobalt",
 };
 
-const aspects = { wide: "aspect-[16/9]", video: "aspect-video", square: "aspect-square" };
+/** photo(4:3)는 서브페이지 01 섹션의 오른쪽 스테이지 비율 */
+const aspects = { wide: "aspect-[16/9]", video: "aspect-video", photo: "aspect-[4/3]", square: "aspect-square" };
 
 /**
  * 이미지 무대. 솔루션 카드·서브페이지의 3D 오브젝트가 놓이는 틴트 배경.

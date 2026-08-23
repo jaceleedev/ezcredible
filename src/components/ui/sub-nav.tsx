@@ -1,5 +1,7 @@
+"use client";
+
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 type SubNavItem = { label: string; href: string };
@@ -13,8 +15,19 @@ type SubNavProps = {
   className?: string;
 };
 
-/** 서브페이지 배너 아래에 떠 있는 알약형 섹션 내비 */
+/** 서브페이지 배너 아래에 떠 있는 알약형 섹션 내비. 모바일에서는 가로 스크롤되며 활성 항목이 보이도록 맞춘다. */
 export function SubNav({ items, current, action, className }: SubNavProps) {
+  const scroller = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = scroller.current;
+    const active = el?.querySelector<HTMLElement>("[aria-current='page']");
+    if (!el || !active) return;
+    // 활성 알약이 잘려 있으면 가운데로 — 페이지 세로 스크롤은 건드리지 않는다
+    const left = active.offsetLeft - (el.clientWidth - active.offsetWidth) / 2;
+    el.scrollTo({ left: Math.max(0, left), behavior: "instant" });
+  }, [current]);
+
   return (
     <div
       className={cn(
@@ -22,7 +35,7 @@ export function SubNav({ items, current, action, className }: SubNavProps) {
         className,
       )}
     >
-      <div className="flex min-w-0 items-center gap-1 overflow-x-auto [scrollbar-width:none]">
+      <div ref={scroller} className="flex min-w-0 items-center gap-1 overflow-x-auto [scrollbar-width:none]">
         {items.map((item) => {
           const active = item.href === current;
           return (
