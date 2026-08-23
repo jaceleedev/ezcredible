@@ -20,7 +20,7 @@ export function Stat({ label, value, unit, prefix, plain = false, tone = "dark",
   return (
     <div className={cn("flex flex-col gap-3", className)}>
       <div className={cn("text-[13px] font-semibold", dark ? "text-cobalt-300" : "text-muted")}>{label}</div>
-      <div className="flex items-baseline gap-1">
+      <div className="flex items-baseline gap-1 whitespace-nowrap">
         <span className={cn("font-display text-stat font-extrabold tabular-nums", dark ? "text-white" : "text-ink")}>
           {prefix}
           {typeof value === "number" ? <Counter value={value} plain={plain} /> : value}
@@ -36,7 +36,7 @@ export function StatGrid({ children, className }: { children: ReactNode; classNa
   return (
     <div
       className={cn(
-        "grid grid-cols-2 divide-x divide-y divide-white/10 *:p-7 *:nth-[1]:border-t-0 *:nth-[2]:border-t-0 md:*:p-9",
+        "grid grid-cols-2 divide-x divide-y divide-white/10 *:p-5 *:nth-[1]:border-t-0 *:nth-[2]:border-t-0 sm:*:p-7 md:*:p-9",
         className,
       )}
     >

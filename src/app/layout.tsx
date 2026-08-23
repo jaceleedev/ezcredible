@@ -4,7 +4,7 @@ import "./globals.css";
 import { company } from "@/content/site";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
-import { SmoothScroll } from "@/components/motion/smooth-scroll";
+import { MotionRoot } from "@/components/motion/motion-root";
 
 /** 헤드라인 전용 SUIT. 본문 Pretendard는 globals.css의 동적 서브셋 @font-face로 로드된다. */
 const suit = localFont({
@@ -36,7 +36,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ko" className={`${suit.variable} h-full`}>
       <body id="top" className="flex min-h-full flex-col">
-        <SmoothScroll />
+        <MotionRoot />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

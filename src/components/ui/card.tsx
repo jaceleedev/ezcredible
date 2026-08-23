@@ -3,7 +3,7 @@ import { cn } from "@/lib/cn";
 
 type CardProps = ComponentProps<"div"> & {
   tone?: "white" | "soft" | "navy";
-  /** 호버 시 살짝 떠오르는 카드 */
+  /** 호버 시 살짝 떠오르는 카드 — 그림자는 의사요소 불투명도로만 바뀌어 끊김이 없다 */
   interactive?: boolean;
   padding?: "none" | "md" | "lg";
 };
@@ -20,11 +20,11 @@ export function Card({ tone = "white", interactive = false, padding = "md", clas
   return (
     <div
       className={cn(
-        "relative flex flex-col overflow-hidden rounded-3xl",
+        "relative isolate flex flex-col rounded-3xl",
         tones[tone],
         paddings[padding],
         interactive &&
-          "transition-[transform,box-shadow] duration-500 ease-(--ease-out-expo) hover:-translate-y-1.5 hover:shadow-card-hover",
+          "transition-transform duration-500 ease-out-quart will-change-transform hover:-translate-y-2 before:pointer-events-none before:absolute before:inset-0 before:-z-10 before:rounded-[inherit] before:opacity-0 before:shadow-card-hover before:transition-opacity before:duration-500 hover:before:opacity-100",
         className,
       )}
       {...props}

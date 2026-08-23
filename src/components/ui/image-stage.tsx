@@ -54,7 +54,7 @@ export function ImageStage({
       ) : (
         <>
           <StageArt kind={art} />
-          {label && (
+          {label && process.env.NODE_ENV !== "production" && (
             <span
               className={cn(
                 "absolute bottom-3 left-3.5 rounded-md px-2 py-1 text-[11px] font-semibold",

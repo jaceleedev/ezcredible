@@ -186,10 +186,10 @@ export default function DesignSystemPage() {
           </DarkPanel>
         </Demo>
 
-        <Demo id="cards" title="카드" note="white 카드는 레이어드 그림자(shadow-card), interactive면 호버에 1.5px 떠오른다. 솔루션 카드 = ImageStage + 제목 + 설명 + 칩 + 링크. 사례 카드 = 메타 + 결과 헤드라인 + 키값 행.">
+        <Demo id="cards" title="카드" note="white 카드는 레이어드 그림자(shadow-card), interactive면 호버에 8px 떠오르고 진한 그림자가 서서히 겹친다. 솔루션 카드 = ImageStage + 제목 + 설명 + 칩 + 링크. 사례 카드 = 메타 + 결과 헤드라인 + 키값 행.">
           <div className="grid gap-6 md:grid-cols-3">
             <Card padding="none" interactive>
-              <ImageStage tint="sky" art="document" className="rounded-none" />
+              <ImageStage tint="sky" art="document" className="rounded-b-none rounded-t-3xl" />
               <div className="flex flex-1 flex-col gap-3.5 p-7">
                 <h3 className="text-h3">정책자금 솔루션</h3>
                 <p className="text-[15px] leading-relaxed text-body">세밀한 분석으로 자금 확보를 도와드립니다.</p>
@@ -198,7 +198,7 @@ export default function DesignSystemPage() {
               </div>
             </Card>
             <Card padding="none" interactive>
-              <ImageStage tint="mint" art="coins" className="rounded-none" />
+              <ImageStage tint="mint" art="coins" className="rounded-b-none rounded-t-3xl" />
               <div className="flex flex-1 flex-col gap-3.5 p-7">
                 <h3 className="text-h3">유동성자금 솔루션</h3>
                 <p className="text-[15px] leading-relaxed text-body">필요한 자금을 부채 없이 마련합니다.</p>
@@ -207,7 +207,7 @@ export default function DesignSystemPage() {
               </div>
             </Card>
             <Card padding="none" interactive>
-              <ImageStage tint="lavender" art="bars" className="rounded-none" />
+              <ImageStage tint="lavender" art="bars" className="rounded-b-none rounded-t-3xl" />
               <div className="flex flex-1 flex-col gap-3.5 p-7">
                 <h3 className="text-h3">성장 솔루션</h3>
                 <p className="text-[15px] leading-relaxed text-body">지속적 성장을 위해 필요한 것들을 제시합니다.</p>
@@ -324,10 +324,10 @@ export default function DesignSystemPage() {
           </div>
         </Demo>
 
-        <Demo id="logo" title="로고" note="라이브 사이트의 실제 SVG 패스를 인라인으로. fill=currentColor라 text-* 로 색을 정한다. mark는 심볼만, lockup은 (주)이지크레더블 워드마크 포함.">
+        <Demo id="logo" title="로고" note="public/brand/ezcredible-logo.svg(클라이언트 제공 원본)를 파일 그대로 쓴다. 푸터는 원본을 흰색으로만 바꾼 사본, 헤더는 한글을 잘라낸 마크 사본 + Pretendard 텍스트.">
           <div className="grid gap-4 md:grid-cols-2">
-            <div className="flex items-center gap-10 rounded-3xl border border-line p-8 text-brand"><Logo className="h-10" /><Logo variant="lockup" className="h-24" /></div>
-            <div className="flex items-center gap-10 rounded-3xl bg-navy-deep p-8 text-white"><Logo className="h-10" /><Logo variant="lockup" className="h-24" /></div>
+            <div className="flex flex-col gap-8 rounded-3xl border border-line p-8"><div className="flex items-center gap-2.5 text-brand"><Logo variant="mark" className="h-7" /><span className="font-sans text-lg font-bold tracking-tight">(주)이지크레더블</span></div><Logo variant="lockup" className="h-24" /></div>
+            <div className="flex flex-col gap-8 rounded-3xl bg-navy-deep p-8 text-white"><div className="flex items-center gap-2.5"><Logo variant="mark" tone="white" className="h-7" /><span className="font-sans text-lg font-bold tracking-tight">(주)이지크레더블</span></div><Logo variant="lockup" tone="white" className="h-24" /></div>
           </div>
         </Demo>
       </Container>

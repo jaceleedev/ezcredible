@@ -56,7 +56,7 @@ export function CTABand({
         <h2 className={cn("text-white", inset ? "text-h2" : "text-h1")}>{title}</h2>
         {lead && <p className="text-lead text-white/88">{lead}</p>}
       </div>
-      <Button href={ctaHref} variant="white" size="lg" className="self-start md:self-auto">
+      <Button href={ctaHref} variant="white" size="lg" className={inset ? "self-start md:self-auto" : "self-start"}>
         {ctaLabel}
       </Button>
     </div>

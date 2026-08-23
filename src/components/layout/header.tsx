@@ -26,7 +26,6 @@ export function Header() {
   }, []);
 
   useEffect(() => {
-    document.documentElement.classList.toggle("lenis-stopped", open);
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
@@ -44,9 +43,9 @@ export function Header() {
       )}
     >
       <div className="mx-auto flex h-[72px] w-full max-w-(--container-site) items-center justify-between px-5 sm:px-8 lg:h-[88px]">
-        <Link href="/" className="flex items-center gap-3" aria-label="이지크레더블 홈">
-          <Logo className={cn("h-6 transition-colors", solid ? "text-brand" : "text-white")} />
-          <span className="font-display text-[17px] font-extrabold tracking-tight">이지크레더블</span>
+        <Link href="/" className="flex items-center gap-2.5" aria-label="(주)이지크레더블 홈">
+          <Logo variant="mark" tone={solid ? "blue" : "white"} priority className="h-6 sm:h-7" />
+          <span className={cn("font-sans text-[17px] font-bold tracking-tight transition-colors sm:text-lg", solid ? "text-brand" : "text-white")}>(주)이지크레더블</span>
         </Link>
 
         <nav aria-label="주 메뉴" className="hidden items-center gap-1 lg:flex">
@@ -110,7 +109,6 @@ export function Header() {
         id="mobile-menu"
         hidden={!open}
         className="fixed inset-x-0 bottom-0 top-[72px] z-40 overflow-y-auto bg-white text-ink lg:hidden"
-        data-lenis-prevent
       >
         <div className="flex flex-col gap-2 px-5 py-6">
           {nav.map((group) => (
