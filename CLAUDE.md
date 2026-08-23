@@ -71,12 +71,29 @@ www.ezcredible.com(한국 B2B 기업금융 컨설팅: 정책자금 · 유동성�
 
 ### 다음 세션 가이드 — 순서대로
 
-1. **계정 3개 만들고 연결** (Jace가 해야 하는 일 — 코드는 준비됨):
-   - Neon 프로젝트 생성(**리전 싱가포르 `aws-ap-southeast-1`** — 방침 국외이전 표에 싱가포르로 적혀 있음. 다른 리전을 고르면 `privacy.ts` 표도 고칠 것) → SQL Editor에 `db/schema.sql` 붙여넣기 → Pooled connection string을 `DATABASE_URL`로
-   - Resend 가입 → `ezcredible.com` 도메인 인증(DNS에 DKIM/SPF 레코드) → API 키를 `RESEND_API_KEY`, 대표님 메일을 `CONSULTATION_NOTIFY_TO`, `CONSULTATION_NOTIFY_FROM`은 `"이지크레더블 상담신청 <noreply@ezcredible.com>"`. 도메인 인증 전에는 `onboarding@resend.dev`로 나가고 **Resend 계정 소유자 메일로만 수신**된다
-   - `ADMIN_PASSWORD`(20자 이상 무작위) · `ADMIN_SESSION_SECRET` · `IP_HASH_SECRET` 생성해서 Vercel 환경변수에 등록
-   - **배포 후 반드시 실제 폼으로 1건 제출해서** 저장 + 메일 수신 + `/admin` 목록 노출까지 확인
-2. **배포**: 도메인 연결 → `privacyMeta.revised`를 배포일로 → `sitemap.xml`·`robots.txt`(design-system·admin·api 차단)·OG 태그를 실제 도메인에서 확인 → 네이버 서치어드바이저·구글 서치콘솔에 sitemap 제출 → 기존 유입 URL 17개 200 확인(리다이렉트는 `/rental/*` 하나뿐)
+계정은 이미 다 만들었다 — Neon(싱가포르, 스키마 적용됨) · Resend(Jace 계정) · Vercel(Jace 새 계정). 로컬 `.env.local`에 값이 다 들어 있고 실제로 저장·발송까지 확인했다.
+
+1. **도메인 없이 Vercel에 먼저 배포한다** (DNS를 기다릴 필요 없는 유일한 큰 작업).
+   `*.vercel.app` 주소로 올려서 프로덕션에서 실제로 도는지 확인하는 게 목적이다. 도메인은 나중에 붙이면 된다.
+
+   **⚠ `.env.local`은 배포되지 않는다.** `.gitignore`에 걸려 있어 git에도 없고 Vercel도 못 본다.
+   Vercel 프로젝트 설정 > Environment Variables에 **직접** 넣어야 한다. 안 넣으면 빌드는 성공하고
+   런타임에만 조용히 실패한다(폼은 "준비 중", `/admin`은 "DATABASE_URL 없음").
+
+   넣을 값 6개 — `.env.local`의 값 그대로:
+   `DATABASE_URL` `RESEND_API_KEY` `CONSULTATION_NOTIFY_TO` `ADMIN_PASSWORD` `ADMIN_SESSION_SECRET` `IP_HASH_SECRET`
+   `CONSULTATION_NOTIFY_FROM`·`CONSULTATION_REPLY_TO`는 **키를 만들지 말 것**(도메인 인증 후 FROM만 추가).
+   빈 값으로 키만 만들어도 이제는 안전하다 — `deliver-consultation.ts`의 `env()`가 빈 문자열을 미설정으로 본다.
+
+   **환경변수는 Production만 체크한다.** 셋 다 체크하면 브랜치 푸시마다 생기는 프리뷰 배포가
+   운영 DB에 직접 쓴다(프리뷰에서 폼 테스트하면 진짜 상담 목록에 섞인다).
+   Production만 두면 프리뷰에서는 폼이 "준비 중"으로 뜨고 운영 데이터를 안 건드린다.
+
+   Hobby 한도는 여유가 크다(함수 300초·2GB, 외부 네트워크 제한 없음, 리전 1개 — `vercel.json`에 `sin1` 고정).
+   배포 후 **실제 폼으로 1건 제출**해서 저장 + 메일 수신 + `/admin` 노출까지 확인하고, 그 행은 지운다.
+2. **도메인 연결은 카페24 접근 권한을 받은 뒤**(위 "배포 차단 요인" 절). 그때 할 것:
+   `privacyMeta.revised`를 배포일로 → 실제 도메인에서 `sitemap.xml`·`robots.txt`·OG 태그 확인 →
+   네이버 서치어드바이저·구글 서치콘솔에 sitemap 제출 → 기존 유입 URL 17개 200 확인(리다이렉트는 `/rental/*` 하나뿐)
 3. **클라이언트 데이터 반영**(받는 대로): 보호책임자 이메일(`site.ts` `privacyOfficer.email` — 전화는 채워짐), 2024~2026 성공사례(`src/content/cases.ts`)·수치(`src/content/home.ts` `stats`)·연혁(`src/content/pages/about.ts` `history`, 2023.1 이후 공백에 DevLabel), 의료/어음/PG/VAN 상품 수치·B2B 취급은행(`TODO(client)` 주석 검색), 고해상도 기관 로고(`public/images/partners/`)
 4. **배포 전 QA — 2026-08-24 1회차 완료.** 남은 건 Safari 하나뿐.
    - 측정 방식: 각 페이지를 지정 폭 iframe에 띄워 `scrollWidth` 초과·깨진 이미지·h1 개수를 재는 스크립트(스크린샷 육안 확인보다 확실하다). **19페이지 × 4폭(390/1200/1440/1920) = 76조합 전부 이상 없음**, 관리자 3페이지 × 4폭도 이상 없음
