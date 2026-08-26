@@ -14,11 +14,26 @@ www.ezcredible.com(한국 B2B 기업금융 컨설팅: 정책자금 · 유동성�
 - 보고 전 검사: `pnpm exec tsc --noEmit` → `pnpm lint` → `pnpm build`, 그리고 브라우저에서 **1200 / 1440 / 1920 / 390** 폭 확인
   (1200에서만 보고 넘겼다가 넓은 화면에서 히어로가 어긋난 적이 있다)
 
-## 현재 상태 (2026-08-26 기준) — 코드 완료 + Vercel 프로덕션 가동, 도메인 연결만 남음
+## 현재 상태 (2026-08-27 기준) — **www.ezcredible.com 실서비스 중** (도메인·알림 메일 연결 완료)
 
 완료: 디자인 시스템(`/design-system`, noindex) · 홈 · **서브페이지 17/17 → 2026-08-26 대표 피드백으로 12개**(아래 절) · 404 · sitemap · robots · OG 이미지 · 렌탈 리다이렉트 · **코덱스 3D 이미지 21장**(`675037b`) · **상담 저장·알림·관리자 페이지**(`2392272`) · **Vercel 배포 + 폼→저장→메일→admin 전 구간 검증**(아래 "배포 상태")
 마지막 커밋 `3f3832e`(2026-08-24 2차 작업 — 아래 절). 프로덕션 반영 확인 완료.
 **2026-08-26 대표 피드백 반영분은 아직 미커밋**(커밋·푸시는 Jace 지시 대기) — 푸시하면 프로덕션에도 반영된다.
+
+### 2026-08-27 도메인 연결 완료 — www.ezcredible.com 실서비스 시작
+
+Jace가 카페24·Vercel·Resend 대시보드 작업, 세션이 가이드·실측 검증. 옛 회사 Vercel은 이미 도메인을 놓은 상태였다
+(엣지가 DEPLOYMENT_NOT_FOUND 404 → **TXT 소유 검증 없이** 새 프로젝트에 바로 붙었다).
+
+- **DNS(카페24)**: 루트 A `216.198.79.1`(Vercel 새 권장값 — 76.76.21.21에서 교체), www CNAME `2f0f26385d1d65f5.vercel-dns-017.com`(프로젝트 전용 값). apex → www **308**. 카페24 UI에는 `@` 칸이 없다 — **호스트 칸을 빈칸으로 두면 루트**다.
+  루트 MX(worksmobile)는 건드리지 않았다(안 쓰는 흔적 — 정리는 나중에 선택). factoring.ezcredible.com은 옛 연결이 끊기며 이미 404 — "내린다" 결정이 자동 달성됨
+- **Resend 도메인 인증 완료(도쿄 ap-northeast-1)**: `send` MX·SPF TXT + `resend._domainkey` DKIM 등록·Verified(dig 실측). `_dmarc`는 안 넣었다 — 소량 발송이라 불필요, 여유 될 때 `v=DMARC1; p=none;` 추가하면 좋은 정도
+- **알림 메일 실서비스 구성**: Vercel(Production) `CONSULTATION_NOTIFY_FROM=이지크레더블 상담신청 <noreply@ezcredible.com>` · `CONSULTATION_NOTIFY_TO=hanmi0697@hanmail.net,jaceleedev@gmail.com`(대표님+Jace — 코드는 원래 쉼표 다중 지원이라 코드 변경 없음). `.env.local`도 동일하게 맞춤.
+  **프로덕션 API로 테스트 1건 제출 → 저장 + Jace 지메일 수신(noreply@ 발신, 스팸 아님) + admin 알림 시각 정상까지 Jace 실확인.** 대표님 hanmail 수신은 미확인 — 스팸함 포함 확인 요청해 둠. 테스트 행("테스트 접수(삭제 요망)")은 admin에서 삭제할 것
+- **개정일**: `privacyMeta.revised` = 2026년 8월 27일(오픈일), `contentRevised` = 2026-08-27 (`375bc6d`)
+- **실도메인 검증(전부 실측)**: 홈+12페이지 200 · 루트→www 308 · canonical·og:url = www.ezcredible.com · robots + sitemap(13 URL) + OG 이미지 200 · 삭제 5 URL 404 · /admin 307
+- **검색엔진 등록**: 네이버 서치어드바이저·구글 서치콘솔 소유확인 코드를 `site.ts` `searchConsole`에 등록(`375bc6d`), 프로덕션 메타태그 노출 확인. **Jace가 각 사이트에서 소유확인 버튼 → `sitemap.xml` 제출을 진행하는 단계**
+- 남은 것: 대표님 hanmail 수신 확인 · 사이트맵 제출 완료 · 테스트 접수 행 삭제 · (선택) `_dmarc` · (선택) 루트 MX 정리
 
 ### 2026-08-26 대표(클라이언트) 피드백 반영 — 페이지 5개 삭제 · 기관/공급사 이름 정리 (미커밋)
 
@@ -66,7 +81,7 @@ www.ezcredible.com(한국 B2B 기업금융 컨설팅: 정책자금 · 유동성�
 
 ### 배포 상태 (2026-08-24) — Vercel 프로덕션 가동, 폼 전 구간 검증 완료
 
-- **Production URL: https://ezcredible-blond.vercel.app** (카페24 DNS 접근 전 임시 주소). 배포는 Vercel 대시보드로(이 맥에 CLI 없음)
+- **Production URL: https://www.ezcredible.com** (2026-08-27 도메인 연결 — 위 절. ezcredible-blond.vercel.app은 내부 확인용으로 계속 동작). 배포는 Vercel 대시보드로(이 맥에 CLI 없음)
 - pnpm 11.22는 `ENABLE_EXPERIMENTAL_COREPACK=1`(3개 환경 전부)로 해결 — 빌드 로그 "using pnpm v11.22.0" 확인
 - **Neon 브랜치를 dev / production으로 분리했다(Jace 설계)**: `.env.local` = dev 브랜치, Vercel = production 브랜치.
   **로컬에서 프로덕션 데이터가 안 보이는 게 정상**이며, "Vercel에 .env.local 값 그대로"라던 예전 지침은 `DATABASE_URL`에는 해당 없음
@@ -111,7 +126,7 @@ www.ezcredible.com(한국 B2B 기업금융 컨설팅: 정책자금 · 유동성�
 - **⚠ 인증 페이지는 반드시 동적이어야 한다**: `isAdminAuthenticated()`가 `cookies()`를 **무조건 먼저** 읽는다. 환경변수 유무로 먼저 분기했더니 빌드 때 `cookies()`에 안 닿아 로그인 화면이 "환경변수 없음" 상태로 정적 프리렌더됐다. Next 16은 Cache Components 사용 시 `export const dynamic`이 제거되므로 여기 의존하지 말 것
 - **환경변수 9개**: `.env.example` 참조 (`DATABASE_URL` `RESEND_API_KEY` `CONSULTATION_NOTIFY_TO` `CONSULTATION_NOTIFY_FROM` `CONSULTATION_REPLY_TO` **`ADMIN_EMAIL`** `ADMIN_PASSWORD` `ADMIN_SESSION_SECRET` `IP_HASH_SECRET`). 이 중 FROM은 도메인 인증 후에, **REPLY_TO는 현재 미사용**(위 "배포 상태" — Vercel에서 제거함), **`ADMIN_EMAIL`은 2026-08-24 신설이라 Vercel에 아직 없다**
 
-### 배포 차단 요인 — 클라이언트에게 받을 것 하나 (2026-08-24 조사)
+### ~~배포 차단 요인~~ → 해소(2026-08-27) — 카페24 접근을 받아 도메인 연결 완료 (아래는 2026-08-24 조사 기록)
 
 **막힌 것: 카페24 DNS 접근 권한.** Jace는 이 회사를 오래 전에 퇴사해서 계정을 모른다. 이거 하나만 받으면 나머지는 전부 풀린다.
 
@@ -143,9 +158,8 @@ www.ezcredible.com(한국 B2B 기업금융 컨설팅: 정책자금 · 유동성�
 1. ~~도메인 없이 Vercel에 먼저 배포~~ — **완료(2026-08-24). 상세는 위 "배포 상태" 절.**
    다음 git push가 곧 재배포다 — 2차 작업(admin 대시보드 등) 커밋·푸시 후 프로덕션 `/admin`에
    새 사이드바 셸이 뜨는지, 폼이 여전히 접수되는지만 확인하면 된다.
-2. **도메인 연결은 카페24 접근 권한을 받은 뒤**(위 "배포 차단 요인" 절). 그때 할 것:
-   `privacyMeta.revised`를 배포일로 → 실제 도메인에서 `sitemap.xml`·`robots.txt`·OG 태그 확인 →
-   네이버 서치어드바이저·구글 서치콘솔에 sitemap 제출 → 기존 유입 URL 17개 200 확인(리다이렉트는 `/rental/*` 하나뿐)
+2. ~~도메인 연결은 카페24 접근 권한을 받은 뒤~~ — **완료(2026-08-27). 상세는 위 "도메인 연결 완료" 절.**
+   개정일·실도메인 검증·소유확인 코드까지 끝났고, sitemap 제출(Jace 진행)만 남았다.
 3. **클라이언트 데이터 반영**(받는 대로): 보호책임자 이메일(`site.ts` `privacyOfficer.email` — 전화는 채워짐), 2024~2026 성공사례(`src/content/cases.ts`)·수치(`src/content/home.ts` `stats`)·연혁(`src/content/pages/about.ts` `history`, 2023.1 이후 공백에 DevLabel), 의료/어음/PG/VAN 상품 수치·B2B 취급은행(`TODO(client)` 주석 검색), 고해상도 기관 로고(`public/images/partners/`)
 4. **배포 전 QA — 2026-08-24 1회차 완료.** 남은 건 Safari 하나뿐.
    - 측정 방식: 각 페이지를 지정 폭 iframe에 띄워 `scrollWidth` 초과·깨진 이미지·h1 개수를 재는 스크립트(스크린샷 육안 확인보다 확실하다). **19페이지 × 4폭(390/1200/1440/1920) = 76조합 전부 이상 없음**, 관리자 3페이지 × 4폭도 이상 없음
