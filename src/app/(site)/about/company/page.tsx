@@ -12,7 +12,6 @@ import { Callout } from "@/components/ui/callout";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { ImageStage } from "@/components/ui/image-stage";
-import { KeyValueTable } from "@/components/ui/key-value-table";
 import { Chip } from "@/components/ui/pill";
 import { Reveal } from "@/components/motion/reveal";
 import { solutions, stats } from "@/content/home";
@@ -93,21 +92,7 @@ export default function CompanyPage() {
         <PartnerLogos className="flex flex-col gap-12" />
       </NumberedSection>
 
-      <NumberedSection index={5} title="회사 정보">
-        <Reveal>
-          <KeyValueTable
-            rows={[
-              { label: "상호", value: `${company.name} (${company.nameEn})` },
-              { label: "대표자", value: company.ceo },
-              { label: "설립", value: page.founded },
-              { label: "사업자등록번호", value: company.bizNo },
-              { label: "주소", value: company.address },
-              { label: "영업시간", value: company.hours },
-            ]}
-          />
-        </Reveal>
-      </NumberedSection>
-
+      {/* 05 회사 정보 표는 2026-08-26 대표 피드백으로 삭제 — 같은 정보가 푸터에 있다 */}
       <div className="py-20 md:py-24">
         <CTABand inset title={page.ctaTitle} ctaLabel="상담 신청하기" />
       </div>

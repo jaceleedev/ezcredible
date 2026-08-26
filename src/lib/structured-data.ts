@@ -36,8 +36,8 @@ export function organizationLd() {
       "@type": "PostalAddress",
       addressCountry: "KR",
       addressRegion: "서울특별시",
-      addressLocality: "금천구",
-      streetAddress: "서부샛길 606, 대성디폴리스 B동 2006-2호",
+      addressLocality: "강서구",
+      streetAddress: "마곡중앙로 165, 프라이빗타워1차 816-817호",
     },
     areaServed: { "@type": "Country", name: "대한민국" },
     // TODO(client): 대표 전화·이메일을 받으면 contactPoint를, SNS 계정이 있으면 sameAs를 추가한다

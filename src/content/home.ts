@@ -31,7 +31,6 @@ export const solutions: Solution[] = [
       { label: "운전자금", href: "/policy-funds/operating" },
       { label: "B2B구매자금", href: "/policy-funds/b2b-purchase" },
       { label: "시설자금", href: "/policy-funds/facility" },
-      { label: "소상공인자금", href: "/policy-funds/small-business" },
     ],
   },
   {
@@ -43,7 +42,6 @@ export const solutions: Solution[] = [
     image: "/images/solutions/liquidity-funds.png",
     items: [
       { label: "매출채권 팩토링", href: "/liquidity-funds/receivables-factoring" },
-      { label: "의료사업자 대출", href: "/liquidity-funds/medical-business-loans" },
       { label: "전자어음할인", href: "/liquidity-funds/electronic-bills-discount" },
     ],
   },
@@ -56,8 +54,6 @@ export const solutions: Solution[] = [
     image: "/images/solutions/growth.png",
     items: [
       { label: "기업신용평가", href: "/growth/corporate-credit-evaluation" },
-      { label: "PG", href: "/growth/pg" },
-      { label: "VAN", href: "/growth/van" },
       { label: "기업인증", href: "/growth/certification", badge: "NEW" },
     ],
   },
@@ -104,13 +100,15 @@ export const supportInstitutions: PartnerLogo[] = [
   { name: "중소벤처기업진흥공단", src: "/images/partners/kosme.png", maxHeight: 56 },
 ];
 
-/** 업무위탁사 */
+/** 업무위탁사 — 2026-08-26 대표 피드백: 더존비즈온 삭제, 한창 → 엠피원(사명 표기 변경) */
 export const clients: PartnerLogo[] = [
-  { name: "더존비즈온", src: "/images/partners/douzone.png", maxHeight: 40 },
   { name: "NICE평가정보", src: "/images/partners/nice.png", maxHeight: 30 },
   { name: "한국평가데이터", src: "/images/partners/kodata.png", maxHeight: 44 },
   { name: "KIS정보통신", src: "/images/partners/kis.png", maxHeight: 24 },
   { name: "KSNET", src: "/images/partners/ksnet.png", maxHeight: 40 },
   { name: "NICEABC", src: "/images/partners/niceabc.png", maxHeight: 44 },
-  { name: "한창", src: "/images/partners/hanchang.png", maxHeight: 52 },
+  // TODO(client): 엠피원 로고는 mp1.kr 푸터용 회색 버전(220×65 저해상도) — 컬러 버전(logo-2.png)은
+  // 글자가 흰색이라 흰 로고 박스에서 안 보인다. 고해상도 컬러(어두운 글자) 로고를 받으면 교체할 것
+
+  { name: "엠피원", src: "/images/partners/mp1.png", maxHeight: 34 },
 ];

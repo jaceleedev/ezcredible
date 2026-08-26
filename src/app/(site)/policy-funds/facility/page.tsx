@@ -31,7 +31,7 @@ export default function FacilityFundsPage() {
       <NumberedSection
         index={3}
         title="자금별 시설자금 조건"
-        lead="2026년 중진공 6개 세부자금 가운데 시설자금을 지원하는 4개 자금의 한도·기간·금리입니다. 긴급경영안정자금과 밸류체인안정화자금은 운전자금만 지원합니다."
+        lead="2026년 중소기업 정책자금 6개 세부자금 가운데 시설자금을 지원하는 4개 자금의 한도·기간·금리입니다. 긴급경영안정자금과 밸류체인안정화자금은 운전자금만 지원합니다."
       >
         <Reveal>
           <DataTable

@@ -307,7 +307,6 @@ export default function DesignSystemPage() {
               { label: "운전자금", href: "/policy-funds/operating" },
               { label: "B2B구매자금", href: "/policy-funds/b2b-purchase" },
               { label: "시설자금", href: "/policy-funds/facility" },
-              { label: "소상공인자금", href: "/policy-funds/small-business" },
             ]}
             action={<Button variant="navy" size="sm" href="/support/consultation">빠른 상담신청</Button>}
           />
@@ -318,7 +317,7 @@ export default function DesignSystemPage() {
           </div>
         </Demo>
 
-        <Demo id="sub" title="서브페이지 블록" note="src/components/sub — 배너(SubHero)·번호 섹션(NumberedSection) 아래에 조립하는 본문 부품. 같은 스타일로 페이지마다 다른 본문을 만든다. 조합 예: /policy-funds/operating(기본형), /policy-funds/small-business(표 중심), /policy-funds/b2b-purchase(스펙·주의사항), /about/history(타임라인), /about/directions(지도).">
+        <Demo id="sub" title="서브페이지 블록" note="src/components/sub — 배너(SubHero)·번호 섹션(NumberedSection) 아래에 조립하는 본문 부품. 같은 스타일로 페이지마다 다른 본문을 만든다. 조합 예: /policy-funds/operating(기본형), /policy-funds/facility(표 중심), /policy-funds/b2b-purchase(스펙·주의사항), /about/history(타임라인).">
           <div className="flex flex-col gap-3">
             <SectionNumber index={2} />
             <h2 className="text-h2">번호 섹션 헤더</h2>

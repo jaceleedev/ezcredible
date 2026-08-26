@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { company, contentRevised, nav } from "@/content/site";
 
 /**
- * 사이트맵 — 홈 + site.ts nav의 17개 서브페이지. /design-system(noindex)과 /api는 넣지 않는다.
+ * 사이트맵 — 홈 + site.ts nav의 12개 서브페이지. /design-system(noindex)과 /api는 넣지 않는다.
  * lastModified는 site.ts의 contentRevised(수동 개정일). 빌드 시각을 쓰면 배포할 때마다
  * 전 페이지가 바뀐 것처럼 보여 크롤러가 lastmod를 무시하게 된다.
  */

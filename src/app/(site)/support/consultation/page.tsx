@@ -55,7 +55,7 @@ export default function ConsultationPage() {
             ))}
           </ol>
           <p className="text-sm leading-relaxed text-muted">
-            방문 상담을 원하시면 <a href="/about/directions" className="font-semibold text-cobalt-700 underline underline-offset-2">오시는길</a>을 확인하신 뒤 폼에 남겨 주세요. 영업시간 외 접수 건은 다음 영업일에 순서대로 연락드립니다.
+            방문 상담을 원하시면 폼에 함께 남겨 주세요. 주소는 페이지 하단 회사 정보에 있습니다. 영업시간 외 접수 건은 다음 영업일에 순서대로 연락드립니다.
           </p>
         </Reveal>
 
