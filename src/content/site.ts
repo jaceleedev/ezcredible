@@ -92,8 +92,9 @@ export const seo = {
  * 비어 있으면 메타 태그를 아예 렌더하지 않는다.
  */
 export const searchConsole = {
-  naver: "",
-  google: "",
+  // 2026-08-27 발급 (네이버 서치어드바이저 · 구글 서치콘솔 — Jace 계정)
+  naver: "d52a6e3723d0ec3585600dc48e069686d153a763",
+  google: "-AgEuHtsZ56_VAD9OxERyh6JODBspHelwBq9fd74f50",
 } as const;
 
 /**
@@ -101,7 +102,7 @@ export const searchConsole = {
  * new Date()를 쓰면 배포할 때마다 "전 페이지가 방금 바뀌었다"고 알리는 셈이라
  * 크롤러가 lastmod 자체를 신뢰하지 않게 된다. 본문을 실제로 고칠 때 이 값을 올린다.
  */
-export const contentRevised = "2026-08-26";
+export const contentRevised = "2026-08-27";
 
 /** 개인정보 보호책임자 — 개인정보처리방침 제12조에 렌더된다. 확인된 연락처만 표시한다. */
 export const privacyOfficer: { name: string; title: string; email: string; phone: string } = {
